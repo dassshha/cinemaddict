@@ -1,3 +1,5 @@
+import {createElement} from "../render.js";
+
 const createCommentListTemplate = (comments) => {
   let commentsList = '';
   for (let i=0;i<comments.length;i++) {
@@ -60,4 +62,26 @@ const createCommentsTemplate = (comments) => (
     </div>`
 );
 
-export {createCommentsTemplate};
+export default class CommentsView {
+  #element = null;
+  #comments = null;
+  constructor(comments) {
+    this.#comments = comments;
+  }
+
+  get element () {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template () {
+    return createCommentsTemplate(this.#comments);
+  }
+
+  removeElement () {
+    this.#element.remove();
+  }
+}

@@ -1,4 +1,5 @@
-import {createCommentsTemplate} from "./comments-view.js";
+import CommentsView from "./comments-view.js";
+import {createElement} from "../render.js";
 
 const createGenreTemplate = (genres) => {
   if (genres.length === 1) {
@@ -93,9 +94,33 @@ const createPopupTemplate = (popup, comments) => (
   <form class="film-details__inner" action="" method="get">
     ${createInfoTemplate(popup)}
 
-    ${createCommentsTemplate(comments)}
+    ${new CommentsView(comments).template}
   </form>
 </section>`
 );
 
-export {createPopupTemplate};
+export default class PopupView {
+  #element = null;
+  #popup = null;
+  #comments = null;
+  constructor(popup, comments) {
+    this.#popup = popup;
+    this.#comments = comments;
+  }
+
+  get element () {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template () {
+    return createPopupTemplate(this.#popup, this.#comments);
+  }
+
+  removeElement () {
+    this.#element.remove();
+  }
+}

@@ -6,16 +6,18 @@ import FilmsView from "./view/films-view.js";
 import FilmCardView from "./view/film-card-view.js";
 import ShowMoreView from "./view/show-more-view.js";
 import FilmsCountView from "./view/films-count-view.js";
+import PopupView from "./view/popup-view.js";
 import {generateFilm} from "./mock/film.js";
-import {createPopupTemplate} from "./view/popup-view.js";
 import {generatePopup} from "./mock/popup.js";
 import {generateComment} from "./mock/comment.js";
 import {getRandomNumber} from "./utils";
+import CommentsView from "./view/comments-view.JS";
 
 const CARDS_COUNT_PER_STEP = 5;
 const CARDS_COUNT = 23;
 const CARDS_TOP_COUNT = 2;
 const filmsData = Array.from({length: CARDS_COUNT}, generateFilm);
+const commentsData = Array.from({length: getRandomNumber(0, 5)}, generateComment);
 
 // значок профиля
 const header = document.querySelector('.header');
@@ -68,12 +70,11 @@ for (let i=0;i < CARDS_TOP_COUNT; i++) {
   render(commentedFilmsListContainer, new FilmCardView(filmsData[i]).element, RENEDER_POSITION.BEFOREEND);
 }
 
-
+// общее кол-во фильмов (в подвале)
 const footerStatistics = document.querySelector('.footer__statistics');
 render(footerStatistics, new FilmsCountView(0).element, RENEDER_POSITION.BEFOREEND);
 
-
-// const body = document.querySelector('body');
-// const comments = Array.from({length: getRandomNumber(0, 5)}, generateComment);
-// renderTemplate(body, createPopupTemplate(generatePopup(), comments), RENEDER_POSITION.BEFOREEND);
+// попап с подробной инфой о фильме
+const body = document.querySelector('body');
+render(body, new PopupView(generatePopup(), commentsData).element, RENEDER_POSITION.BEFOREEND);
 
