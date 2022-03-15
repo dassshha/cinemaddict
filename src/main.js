@@ -5,7 +5,7 @@ import SortView from "./view/sort-view.js";
 import FilmsView from "./view/films-view.js";
 import FilmCardView from "./view/film-card-view.js";
 import ShowMoreView from "./view/show-more-view.js";
-import {createFilmsCountTemplate} from "./view/films-count-view.js";
+import FilmsCountView from "./view/films-count-view.js";
 import {generateFilm} from "./mock/film.js";
 import {createPopupTemplate} from "./view/popup-view.js";
 import {generatePopup} from "./mock/popup.js";
@@ -36,14 +36,13 @@ for (let i=0;i < Math.min(CARDS_COUNT, CARDS_COUNT_PER_STEP); i++) {
   render(allFilmsListContainer, new FilmCardView(filmsData[i]).element, RENEDER_POSITION.BEFOREEND);
 }
 
+// обработка логики show-more-btn
 if (filmsData.length > CARDS_COUNT_PER_STEP) {
   let renderedCardsCount = CARDS_COUNT_PER_STEP;
 
-  // renderTemplate(filmsList, createShowMoreTemplate(), RENEDER_POSITION.BEFOREEND);
   const allFilmsList = filmsComponent.element.querySelector('.films-list:nth-of-type(1)');
   const showMoreComponent = new ShowMoreView();
   render(allFilmsList, showMoreComponent.element, RENEDER_POSITION.BEFOREEND);
-  // const showMoreButton = document.querySelector('.films-list__show-more');
 
   showMoreComponent.element.addEventListener('click', () => {
     filmsData
@@ -56,20 +55,22 @@ if (filmsData.length > CARDS_COUNT_PER_STEP) {
     }
   });
 }
-//
-// const filmsListRated = films.querySelector('.films-list:nth-of-type(2)').querySelector('.films-list__container');
-// for (let i=0;i < CARDS_TOP_COUNT; i++) {
-//   renderTemplate(filmsListRated, createFilmCardTemplate(generateFilm()), RENEDER_POSITION.BEFOREEND);
-// }
-//
-// const filmsListCommented = films.querySelector('.films-list:nth-of-type(3)').querySelector('.films-list__container');
-// for (let i=0;i < CARDS_TOP_COUNT; i++) {
-//   renderTemplate(filmsListCommented, createFilmCardTemplate(generateFilm()), RENEDER_POSITION.BEFOREEND);
-// }
-//
-//
-// const footerStatistics = document.querySelector('.footer__statistics');
-// renderTemplate(footerStatistics, createFilmsCountTemplate(), RENEDER_POSITION.BEFOREEND);
+
+// топ фильмов с высоким рейтингом
+const ratedFilmsListContainer = filmsComponent.element.querySelector('.films-list:nth-of-type(2)').querySelector('.films-list__container');
+for (let i=0;i < CARDS_TOP_COUNT; i++) {
+  render(ratedFilmsListContainer, new FilmCardView(filmsData[i]).element, RENEDER_POSITION.BEFOREEND);
+}
+
+// топ комментируемых фильмов
+const commentedFilmsListContainer = filmsComponent.element.querySelector('.films-list:nth-of-type(3)').querySelector('.films-list__container');
+for (let i=0;i < CARDS_TOP_COUNT; i++) {
+  render(commentedFilmsListContainer, new FilmCardView(filmsData[i]).element, RENEDER_POSITION.BEFOREEND);
+}
+
+
+const footerStatistics = document.querySelector('.footer__statistics');
+render(footerStatistics, new FilmsCountView(0).element, RENEDER_POSITION.BEFOREEND);
 
 
 // const body = document.querySelector('body');
