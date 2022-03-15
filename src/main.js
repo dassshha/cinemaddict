@@ -1,4 +1,4 @@
-import {RENEDER_POSITION, renderTemplate, render} from "./render.js";
+import {RENEDER_POSITION, render} from "./render.js";
 import ProfileView from "./view/profile-view.js";
 import MainMenuView from "./view/main-menu-view.js";
 import SortView from "./view/sort-view.js";
