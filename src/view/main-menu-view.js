@@ -36,6 +36,6 @@ export default class MainMenuView {
   }
 
   removeElement () {
-    this.#element = null;
+    this.#element.remove();
   }
 }

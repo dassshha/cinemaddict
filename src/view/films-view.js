@@ -33,6 +33,6 @@ export default class FilmsView {
   }
 
   removeElement () {
-    this.#element = null;
+    this.#element.remove();
   }
 }

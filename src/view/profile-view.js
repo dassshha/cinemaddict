@@ -27,6 +27,6 @@ export default class ProfileView {
   }
 
   removeElement () {
-    this.#element = null;
+    this.#element.remove();
   }
 }
