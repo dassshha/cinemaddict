@@ -1,5 +1,5 @@
 import {RENEDER_POSITION, renderTemplate, render} from "./render.js";
-import {ProfileView} from "./view/profile-view.js";
+import ProfileView from "./view/profile-view.js";
 import {createMainMenuTemplate} from "./view/main-menu-view.js";
 import {createSortTemplate} from "./view/sort-view.js";
 import {createFilmsTemplate} from "./view/films-view.js";

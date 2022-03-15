@@ -7,7 +7,7 @@ const createProfileTemplate = (status) => (
   </section>`
 );
 
-export class ProfileView {
+export default class ProfileView {
   #element = null;
   #status = null;
   constructor(status) {
