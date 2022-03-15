@@ -1,5 +1,5 @@
-import {RENEDER_POSITION, renderTemplate} from "./render.js";
-import {createProfileTemplate} from "./view/profile-view.js";
+import {RENEDER_POSITION, renderTemplate, render} from "./render.js";
+import {ProfileView} from "./view/profile-view.js";
 import {createMainMenuTemplate} from "./view/main-menu-view.js";
 import {createSortTemplate} from "./view/sort-view.js";
 import {createFilmsTemplate} from "./view/films-view.js";
@@ -16,8 +16,9 @@ const CARDS_COUNT_PER_STEP = 5;
 const CARDS_COUNT = 23;
 const CARDS_TOP_COUNT = 2;
 
+// значок профиля
 const header = document.querySelector('.header');
-renderTemplate(header, createProfileTemplate('Movie buff'), RENEDER_POSITION.BEFOREEND);
+render(header, new ProfileView('Movie buff').element, RENEDER_POSITION.BEFOREEND);
 
 const main = document.querySelector('.main');
 renderTemplate(main, createMainMenuTemplate(), RENEDER_POSITION.BEFOREEND);
