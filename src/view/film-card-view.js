@@ -1,3 +1,5 @@
+import {createElement} from "../render.js";
+
 const createFilmCardTemplate = (film) => (
   `<article class="film-card">
           <a class="film-card__link">
@@ -20,4 +22,26 @@ const createFilmCardTemplate = (film) => (
         </article>`
 );
 
-export {createFilmCardTemplate};
+export default class FilmCardView {
+  #element = null;
+  #film = null;
+  constructor(film) {
+    this.#film = film;
+  }
+
+  get element () {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+
+    return this.#element;
+  }
+
+  get template () {
+    return createFilmCardTemplate(this.#film);
+  }
+
+  removeElement () {
+    this.#element = null;
+  }
+}
