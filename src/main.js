@@ -4,7 +4,7 @@ import MainMenuView from "./view/main-menu-view.js";
 import SortView from "./view/sort-view.js";
 import FilmsView from "./view/films-view.js";
 import FilmCardView from "./view/film-card-view.js";
-import {createShowMoreTemplate} from "./view/show-more-view.js";
+import ShowMoreView from "./view/show-more-view.js";
 import {createFilmsCountTemplate} from "./view/films-count-view.js";
 import {generateFilm} from "./mock/film.js";
 import {createPopupTemplate} from "./view/popup-view.js";
@@ -36,23 +36,26 @@ for (let i=0;i < Math.min(CARDS_COUNT, CARDS_COUNT_PER_STEP); i++) {
   render(allFilmsListContainer, new FilmCardView(filmsData[i]).element, RENEDER_POSITION.BEFOREEND);
 }
 
-// if (filmsData.length > CARDS_COUNT_PER_STEP) {
-//   let renderedCardsCount = CARDS_COUNT_PER_STEP;
-//
-//   renderTemplate(filmsList, createShowMoreTemplate(), RENEDER_POSITION.BEFOREEND);
-//   const showMoreButton = document.querySelector('.films-list__show-more');
-//
-//   showMoreButton.addEventListener('click', () => {
-//     filmsData
-//       .slice(renderedCardsCount, renderedCardsCount + CARDS_COUNT_PER_STEP)
-//       .forEach((film) =>  renderTemplate(filmsListContainer, createFilmCardTemplate(film), RENEDER_POSITION.BEFOREEND));
-//
-//     renderedCardsCount += CARDS_COUNT_PER_STEP;
-//     if (renderedCardsCount >= filmsData.length) {
-//       showMoreButton.remove();
-//     }
-//   });
-// }
+if (filmsData.length > CARDS_COUNT_PER_STEP) {
+  let renderedCardsCount = CARDS_COUNT_PER_STEP;
+
+  // renderTemplate(filmsList, createShowMoreTemplate(), RENEDER_POSITION.BEFOREEND);
+  const allFilmsList = filmsComponent.element.querySelector('.films-list:nth-of-type(1)');
+  const showMoreComponent = new ShowMoreView();
+  render(allFilmsList, showMoreComponent.element, RENEDER_POSITION.BEFOREEND);
+  // const showMoreButton = document.querySelector('.films-list__show-more');
+
+  showMoreComponent.element.addEventListener('click', () => {
+    filmsData
+      .slice(renderedCardsCount, renderedCardsCount + CARDS_COUNT_PER_STEP)
+      .forEach((film) =>  render(allFilmsListContainer, new FilmCardView(film).element, RENEDER_POSITION.BEFOREEND));
+
+    renderedCardsCount += CARDS_COUNT_PER_STEP;
+    if (renderedCardsCount >= filmsData.length) {
+      showMoreComponent.removeElement();
+    }
+  });
+}
 //
 // const filmsListRated = films.querySelector('.films-list:nth-of-type(2)').querySelector('.films-list__container');
 // for (let i=0;i < CARDS_TOP_COUNT; i++) {
