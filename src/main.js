@@ -1,6 +1,6 @@
 import {RENEDER_POSITION, renderTemplate, render} from "./render.js";
 import ProfileView from "./view/profile-view.js";
-import {createMainMenuTemplate} from "./view/main-menu-view.js";
+import MainMenuView from "./view/main-menu-view.js";
 import {createSortTemplate} from "./view/sort-view.js";
 import {createFilmsTemplate} from "./view/films-view.js";
 import {createFilmCardTemplate} from "./view/film-card-view.js";
@@ -20,8 +20,10 @@ const CARDS_TOP_COUNT = 2;
 const header = document.querySelector('.header');
 render(header, new ProfileView('Movie buff').element, RENEDER_POSITION.BEFOREEND);
 
+// фильтры и сортировка
 const main = document.querySelector('.main');
-renderTemplate(main, createMainMenuTemplate(), RENEDER_POSITION.BEFOREEND);
+// renderTemplate(main, createMainMenuTemplate(), RENEDER_POSITION.BEFOREEND);
+render(main, new MainMenuView(0, 0, 0).element, RENEDER_POSITION.BEFOREEND);
 renderTemplate(main, createSortTemplate(), RENEDER_POSITION.BEFOREEND);
 
 renderTemplate(main, createFilmsTemplate(), RENEDER_POSITION.BEFOREEND);
