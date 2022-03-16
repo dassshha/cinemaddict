@@ -22,22 +22,22 @@ const commentsData = Array.from({length: getRandomNumber(0, 5)}, generateComment
 
 // значок профиля
 const header = document.querySelector('.header');
-render(header, new ProfileView('Movie buff').element, RENEDER_POSITION.BEFOREEND);
+render(header, new ProfileView('Movie buff'), RENEDER_POSITION.BEFOREEND);
 
 // фильтры и сортировка
 const main = document.querySelector('.main');
-render(main, new MainMenuView(0, 0, 0).element, RENEDER_POSITION.BEFOREEND);
+render(main, new MainMenuView(0, 0, 0), RENEDER_POSITION.BEFOREEND);
 // при отсутствии фильмов сортировка не отображается
 if (filmsData.length !== 0) {
-  render(main, new SortView().element, RENEDER_POSITION.BEFOREEND);
+  render(main, new SortView(), RENEDER_POSITION.BEFOREEND);
 }
 
 // контейнер с тремя списками: для всех фильмов, для комментируемых и тех, что в рейтинге
 const filmsComponent = new FilmsView();
-render(main, filmsComponent.element, RENEDER_POSITION.BEFOREEND);
+render(main, filmsComponent, RENEDER_POSITION.BEFOREEND);
 
 if (filmsData.length === 0) {
-  render(filmsComponent.element, new FilmsListEmptyView('There are no films in our database').element, RENEDER_POSITION.BEFOREEND);
+  render(filmsComponent, new FilmsListEmptyView('There are no films in our database'), RENEDER_POSITION.BEFOREEND);
 } else {
   renderAllFilms();
 }
@@ -56,13 +56,13 @@ if (filmsData.length === 0) {
 
 // общее кол-во фильмов (в подвале)
 const footerStatistics = document.querySelector('.footer__statistics');
-render(footerStatistics, new FilmsCountView(0).element, RENEDER_POSITION.BEFOREEND);
+render(footerStatistics, new FilmsCountView(0), RENEDER_POSITION.BEFOREEND);
 
 
 function renderAllFilms () {
   // контейнер для всех фильмов
   const filmsListAllComponent = new FilmsListAllView();
-  render(filmsComponent.element, filmsListAllComponent.element, RENEDER_POSITION.BEFOREEND);
+  render(filmsComponent, filmsListAllComponent, RENEDER_POSITION.BEFOREEND);
   const filmsListAllContainer = filmsListAllComponent.element.querySelector('.films-list__container');
   for (let i=0;i < Math.min(CARDS_COUNT, CARDS_COUNT_PER_STEP); i++) {
     renderFilm(filmsListAllContainer, filmsData[i]);
@@ -74,7 +74,7 @@ function renderAllFilms () {
 
     const allFilmsList = filmsComponent.element.querySelector('.films-list:nth-of-type(1)');
     const showMoreComponent = new ShowMoreView();
-    render(allFilmsList, showMoreComponent.element, RENEDER_POSITION.BEFOREEND);
+    render(allFilmsList, showMoreComponent, RENEDER_POSITION.BEFOREEND);
 
     showMoreComponent.element.addEventListener('click', () => {
       filmsData
@@ -127,7 +127,7 @@ function renderFilm (container, film) {
   });
 
 
-  render(container, filmCard.element, RENEDER_POSITION.BEFOREEND);
+  render(container, filmCard, RENEDER_POSITION.BEFOREEND);
 }
 
 
