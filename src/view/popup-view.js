@@ -1,5 +1,5 @@
 import CommentsView from "./comments-view.js";
-import {createElement} from "../render.js";
+import AbstractView from "./abstract-view.js";
 
 const createGenreTemplate = (genres) => {
   if (genres.length === 1) {
@@ -99,28 +99,16 @@ const createPopupTemplate = (popup, comments) => (
 </section>`
 );
 
-export default class PopupView {
-  #element = null;
+export default class PopupView extends AbstractView{
   #popup = null;
   #comments = null;
   constructor(popup, comments) {
+    super();
     this.#popup = popup;
     this.#comments = comments;
   }
 
-  get element () {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
   get template () {
     return createPopupTemplate(this.#popup, this.#comments);
-  }
-
-  removeElement () {
-    this.#element.remove();
   }
 }

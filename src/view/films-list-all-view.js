@@ -1,4 +1,4 @@
-import {createElement} from "../render.js";
+import AbstractView from "./abstract-view.js";
 
 const createFilmsListAllTemplate = () => (
   `<section class="films-list">
@@ -7,22 +7,8 @@ const createFilmsListAllTemplate = () => (
     </section>`
 );
 
-export default class FilmsListAllView {
-  #element = null;
-
-  get element () {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
-
-    return this.#element;
-  }
-
+export default class FilmsListAllView extends AbstractView {
   get template () {
     return createFilmsListAllTemplate();
-  }
-
-  removeElement () {
-    this.#element.remove();
   }
 }
