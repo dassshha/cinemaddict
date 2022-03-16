@@ -1,13 +1,98 @@
-import {
-  generateTitle,
-  generatePoster,
-  generateRating,
-  generateAgeRelease,
-  generateRuntime,
-  getRandomNumber
-} from "../utils.js";
+import {getRandomNumber} from "../utils.js";
 
-const generateGenre = () => {
+const generateTitle = () => {
+  const titles = [
+    'The Dance of Life',
+    'Sagebrush Trail',
+    'The Man with the Golden Arm',
+    'Santa Claus Conquers the Martians',
+    'Popeye the Sailor Meets Sindbad the Sailor'
+  ];
+  return titles[getRandomNumber(0, titles.length - 1)];
+};
+
+const generatePoster = () => {
+  const posters = [
+    'made-for-each-other.png',
+    'sagebrush-trail.jpg',
+    'popeye-meets-sinbad.png',
+    'santa-claus-conquers-the-martians.jpg',
+    'the-dance-of-life.jpg',
+    'the-great-flamarion.jpg',
+    'the-man-with-the-golden-arm.jpg'
+  ];
+  return `./images/posters/${posters[getRandomNumber(0, posters.length - 1)]}`;
+};
+
+const generateRating = () => getRandomNumber(0, 10);
+
+const generateAgeRelease = () => getRandomNumber(1950, 2022);
+
+const generateRuntime = () => getRandomNumber(10, 180);
+
+const generateDirector = () => {
+  const directors = [
+    'Anthony Mann',
+    'Christopher Nolan',
+    'Steven Spielberg',
+    'Quentin Tarantino',
+    'Martin Scorsese'
+  ];
+  return directors[getRandomNumber(0, directors.length - 1)];
+};
+
+const generateWriters = () => {
+  const writers = [
+    'Billy Wilder',
+    'Ethan Coen and Joel Coen',
+    'Robert Towne',
+    'Quentin Tarantino',
+    'Francis Ford Coppola',
+    'William Goldman'
+  ];
+  const generatedWriters = [];
+  const writesCount = getRandomNumber(2, 4);
+  for (let i = 0; i < writesCount; i++) {
+    const writer = writers[getRandomNumber(0, writers.length - 1)];
+    if (!generatedWriters.includes(writer)) {
+      generatedWriters.push(writer);
+    }
+  }
+  return generatedWriters;
+};
+
+const generateActors = () => {
+  const actors = [
+    'Robert De Niro',
+    'Leonardo DiCaprio',
+    'Cate Blanchett',
+    'Audrey Hepburn',
+    'Kate Winslet',
+    'Julia Roberts'
+  ];
+  const generatedActors = [];
+  const actorsCount = getRandomNumber(2, 4);
+  for (let i = 0; i < actorsCount; i++) {
+    const actor = actors[getRandomNumber(0, actors.length - 1)];
+    if (!generatedActors.includes(actor)) {
+      generatedActors.push(actor);
+    }
+  }
+  return generatedActors;
+};
+
+const generateCountry = () => {
+  const countries = [
+    'Russia',
+    'France',
+    'Italy',
+    'Germany',
+    'USA'
+  ];
+  return countries[getRandomNumber(0, countries.length - 1)];
+};
+
+const generateGenres = () => {
   const genres = [
     'Musical',
     'Western',
@@ -15,10 +100,18 @@ const generateGenre = () => {
     'Comedy',
     'Cartoon'
   ];
-  return genres[getRandomNumber(0, genres.length - 1)];
+  const generatedGenres = [];
+  const genresCount = getRandomNumber(1, 3);
+  for (let i = 0; i < genresCount; i++) {
+    const genre = genres[getRandomNumber(0, genres.length - 1)];
+    if (!generatedGenres.includes(genre)) {
+      generatedGenres.push(genre);
+    }
+  }
+  return generatedGenres;
 };
 
-const generateShortDescription = () => {
+const generateFullDescription = () => {
   const descriptions = [
     'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     'Cras aliquet varius magna, non porta ligula feugiat eget.',
@@ -32,26 +125,40 @@ const generateShortDescription = () => {
     'Nunc fermentum tortor ac porta dapibus.',
     'In rutrum ac purus sit amet tempus.'
   ];
-  let shortDescription = '';
-  const sentencesCount = getRandomNumber(1, 5);
+  let fullDescription = '';
+  const sentencesCount = getRandomNumber(5, 10);
   for (let i = 0; i < sentencesCount; i++) {
     const description = descriptions[getRandomNumber(0, descriptions.length - 1)];
-    if (!shortDescription.includes(description)) {
-      shortDescription += description;
+    if (!fullDescription.includes(description)) {
+      fullDescription += description;
     }
   }
-  return shortDescription.slice(0, 140);
+  return fullDescription;
 };
 
-const generateFilm = () => ({
-  poster: generatePoster(),
-  title: generateTitle(),
-  rating: generateRating(),
-  ageRelease: generateAgeRelease(),
-  runtime: generateRuntime(),
-  genre: generateGenre(),
-  shortDescription: generateShortDescription(),
-  commentsCount: '5 comments'
-});
+const generateShortDescription = () => generateFullDescription().slice(0, 140);
 
-export {generateFilm, generateShortDescription};
+const generateAge = () => getRandomNumber(0, 21);
+
+const generateFilm = () => {
+  const title = generateTitle();
+  return {
+    poster: generatePoster(),
+    title: title,
+    originalTitle: title,
+    rating: generateRating(),
+    director: generateDirector(),
+    writers: generateWriters(),
+    actors: generateActors(),
+    dateRelease: generateAgeRelease(),
+    runtime: generateRuntime(),
+    country: generateCountry(),
+    genres: generateGenres(),
+    fullDescription: generateFullDescription(),
+    shortDescription: generateShortDescription(),
+    age: generateAge(),
+    commentsCount: '0 comments'
+  };
+};
+
+export {generateFilm};
