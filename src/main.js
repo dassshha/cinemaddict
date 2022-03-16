@@ -12,7 +12,7 @@ import PopupView from "./view/popup-view.js";
 // import {generateFilm} from "./mock/film.js";
 import {generateFilm} from "./mock/film.js";
 import {generateComment} from "./mock/comment.js";
-import {getRandomNumber} from "./utils";
+import {getRandomNumber, isEscapeKey} from "./utils";
 
 const CARDS_COUNT_PER_STEP = 5;
 const CARDS_COUNT = 23;
@@ -97,15 +97,33 @@ function renderFilm (container, film) {
   const filmLink = filmCard.element.querySelector('.film-card__link');
   const closePopupButton = filmPopup.element.querySelector('.film-details__close-btn');
 
-  filmLink.addEventListener('click', (evt) => {
-    evt.preventDefault();
+  const showPopup = () => {
     body.appendChild(filmPopup.element);
     body.classList.add('hide-overflow');
+  };
+
+  const hidePopup = () => {
+    body.removeChild(filmPopup.element);
+    body.classList.remove('hide-overflow');
+  };
+
+  const onEscKeydown = (evt) => {
+    if (isEscapeKey(evt)) {
+      evt.preventDefault();
+      hidePopup();
+      document.removeEventListener('keydown', onEscKeydown);
+    }
+  };
+
+  filmLink.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    showPopup();
+    document.addEventListener('keydown', onEscKeydown);
   });
 
   closePopupButton.addEventListener('click', () => {
-    body.removeChild(filmPopup.element);
-    body.classList.remove('hide-overflow');
+    hidePopup();
+    document.removeEventListener('keydown', onEscKeydown);
   });
 
 
