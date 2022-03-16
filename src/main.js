@@ -107,6 +107,8 @@ function renderFilm (container, film) {
     body.removeChild(filmPopup.element);
     body.classList.remove('hide-overflow');
   });
+
+
   render(container, filmCard.element, RENEDER_POSITION.BEFOREEND);
 }
 
