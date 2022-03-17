@@ -15,9 +15,12 @@ export default class FilmsListPresenter {
   #filmsComponent = new FilmsView();
   #filmsListAllComponent = new FilmsListAllView();
   #filmsListEmptyComponent = new FilmsListEmptyView('There are no films in our database');
+  #showMoreComponent = new ShowMoreView();
 
   #films = [];
   #comments = [];
+
+  #renderedCardsCount = CARDS_COUNT_PER_STEP;
 
   constructor(filmsContainer) {
     this.#filmsContainer = filmsContainer;
@@ -69,22 +72,20 @@ export default class FilmsListPresenter {
     render(this.#filmsListAllContainer, filmCard, RENEDER_POSITION.BEFOREEND);
   };
 
+  #showMoreClickHandler = () => {
+    this.#films
+      .slice(this.#renderedCardsCount, this.#renderedCardsCount + CARDS_COUNT_PER_STEP)
+      .forEach((film) =>  this.#renderFilm(film));
+
+    this.#renderedCardsCount += CARDS_COUNT_PER_STEP;
+    if (this.#renderedCardsCount >= this.#films.length) {
+      this.#showMoreComponent.removeElement();
+    }
+  };
+
   #renderShowMoreButton = () => {
-    let renderedCardsCount = CARDS_COUNT_PER_STEP;
-    const showMoreComponent = new ShowMoreView();
-
-    render(this.#filmsListAllComponent, showMoreComponent, RENEDER_POSITION.BEFOREEND);
-
-    showMoreComponent.setLoadMoreClickHandler(() => {
-      this.#films
-        .slice(renderedCardsCount, renderedCardsCount + CARDS_COUNT_PER_STEP)
-        .forEach((film) =>  this.#renderFilm(film));
-
-      renderedCardsCount += CARDS_COUNT_PER_STEP;
-      if (renderedCardsCount >= this.#films.length) {
-        showMoreComponent.removeElement();
-      }
-    });
+    render(this.#filmsListAllComponent, this.#showMoreComponent, RENEDER_POSITION.BEFOREEND);
+    this.#showMoreComponent.setShowMoreClickHandler(this.#showMoreClickHandler);
   };
 
   #renderFilms = () => {
@@ -93,7 +94,6 @@ export default class FilmsListPresenter {
     for (let i=0;i < Math.min(CARDS_COUNT, CARDS_COUNT_PER_STEP); i++) {
       this.#renderFilm(this.#films[i]);
     }
-
 
     if (this.#films.length > CARDS_COUNT_PER_STEP) {
       this.#renderShowMoreButton();
