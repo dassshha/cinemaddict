@@ -15,7 +15,6 @@ export default class FilmsListPresenter {
   #filmsComponent = new FilmsView();
   #filmsListAllComponent = new FilmsListAllView();
   #filmsListEmptyComponent = new FilmsListEmptyView('There are no films in our database');
-  #showMoreComponent = new ShowMoreView();
 
   #films = [];
   #comments = [];
@@ -72,17 +71,18 @@ export default class FilmsListPresenter {
 
   #renderShowMoreButton = () => {
     let renderedCardsCount = CARDS_COUNT_PER_STEP;
+    const showMoreComponent = new ShowMoreView();
 
-    render(this.#filmsListAllComponent, this.#showMoreComponent, RENEDER_POSITION.BEFOREEND);
+    render(this.#filmsListAllComponent, showMoreComponent, RENEDER_POSITION.BEFOREEND);
 
-    this.#showMoreComponent.setLoadMoreClickHandler(() => {
+    showMoreComponent.setLoadMoreClickHandler(() => {
       this.#films
         .slice(renderedCardsCount, renderedCardsCount + CARDS_COUNT_PER_STEP)
         .forEach((film) =>  this.#renderFilm(film));
 
       renderedCardsCount += CARDS_COUNT_PER_STEP;
       if (renderedCardsCount >= this.#films.length) {
-        this.#showMoreComponent.removeElement();
+        showMoreComponent.removeElement();
       }
     });
   };
