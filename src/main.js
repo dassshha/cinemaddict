@@ -2,6 +2,7 @@ import {RENEDER_POSITION, render} from "./render.js";
 import ProfileView from "./view/profile-view.js";
 import MainMenuView from "./view/main-menu-view.js";
 import SortView from "./view/sort-view.js";
+import FilmsCountView from "./view/films-count-view.js";
 import {generateFilm} from "./mock/film.js";
 import {generateComment} from "./mock/comment.js";
 import {getRandomNumber} from "./utils";
@@ -28,4 +29,8 @@ if (filmsData.length !== 0) {
 const presenter = new FilmsListPresenter(main);
 presenter.init(filmsData, commentsData);
 
+
+// общее кол-во фильмов (в подвале)
+const footerStatistics = document.querySelector('.footer__statistics');
+render(footerStatistics, new FilmsCountView(0), RENEDER_POSITION.BEFOREEND);
 
