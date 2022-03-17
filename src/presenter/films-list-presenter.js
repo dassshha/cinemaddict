@@ -7,6 +7,7 @@ import FilmCardView from "../view/film-card-view";
 import PopupView from "../view/popup-view";
 import {isEscapeKey} from "../utils";
 import {CARDS_COUNT, CARDS_COUNT_PER_STEP} from "../constants";
+import FilmPresenter from "./film-presenter";
 
 export default class FilmsListPresenter {
   #filmsContainer = null; //main
@@ -36,40 +37,8 @@ export default class FilmsListPresenter {
   }
 
   #renderFilm = (film) => {
-    const filmCard = new FilmCardView(film);
-    const filmPopup = new PopupView(film, this.#comments);
-    const body = document.querySelector('body');
-
-    const showPopup = () => {
-      body.appendChild(filmPopup.element);
-      body.classList.add('hide-overflow');
-    };
-
-    const hidePopup = () => {
-      body.removeChild(filmPopup.element);
-      body.classList.remove('hide-overflow');
-    };
-
-    const onEscKeydown = (evt) => {
-      if (isEscapeKey(evt)) {
-        evt.preventDefault();
-        hidePopup();
-        document.removeEventListener('keydown', onEscKeydown);
-      }
-    };
-
-    filmCard.setOpenPopupClickHandler(() => {
-      showPopup();
-      document.addEventListener('keydown', onEscKeydown);
-    });
-
-    filmPopup.setClosePopupClickHandler(() => {
-      hidePopup();
-      document.removeEventListener('keydown', onEscKeydown);
-    });
-
-
-    render(this.#filmsListAllContainer, filmCard, RENEDER_POSITION.BEFOREEND);
+    const filmPresenter = new FilmPresenter(this.#filmsListAllContainer);
+    filmPresenter.init(film, this.#comments);
   };
 
   #showMoreClickHandler = () => {
