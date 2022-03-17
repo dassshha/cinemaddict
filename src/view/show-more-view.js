@@ -9,12 +9,12 @@ export default class ShowMoreView extends AbstractView{
     return createShowMoreTemplate();
   }
 
-  setLoadMoreClickHandler (callback) {
+  setShowMoreClickHandler (callback) {
     this._callback.loadMoreClick = callback;
-    this.element.addEventListener('click', this.#loadMoreClickHandler);
+    this.element.addEventListener('click', this.#showMoreClickHandler);
   }
 
-  #loadMoreClickHandler = () => {
+  #showMoreClickHandler = () => {
     this._callback.loadMoreClick();
   };
 }
