@@ -42,7 +42,7 @@ export default class FilmsListPresenter {
   };
 
   #renderFilm = (film) => {
-    const filmPresenter = new FilmPresenter(this.#filmsListAllContainer);
+    const filmPresenter = new FilmPresenter(this.#filmsListAllContainer, this.#filmUpdateHandler);
     filmPresenter.init(film, this.#comments);
     this.#filmPresenter.set(film.id, filmPresenter);
   };

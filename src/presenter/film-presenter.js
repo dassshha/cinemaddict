@@ -1,10 +1,11 @@
-import FilmCardView from "../view/film-card-view";
+import FilmCardView from "../view/film-card-view.js";
 import PopupView from "../view/popup-view";
 import {isEscapeKey} from "../utils";
 import {render, RENEDER_POSITION, remove, replace} from "../render";
 
 export default class FilmPresenter {
   #filmsListContainer = null;
+  #filmUpdateHandler = null;
 
   #filmCard = null;
   #filmPopup = null;
@@ -13,8 +14,9 @@ export default class FilmPresenter {
   #film = null;
   #comments = [];
 
-  constructor(filmsListContainer) {
+  constructor(filmsListContainer, filmUpdateHandler) {
     this.#filmsListContainer = filmsListContainer;
+    this.#filmUpdateHandler = filmUpdateHandler;
   }
 
   init = (film, comments) => {
@@ -29,6 +31,12 @@ export default class FilmPresenter {
 
     this.#filmCard.setOpenPopupClickHandler(this.#openPopupClickHandler);
     this.#filmPopup.setClosePopupClickHandler(this.#closePopupClickHandler);
+    this.#filmCard.setAddToWatchListClickHandler(this.#addToWatchListClickHandler);
+    this.#filmPopup.setAddToWatchListClickHandler(this.#addToWatchListClickHandler);
+    this.#filmCard.setMarkAsWatchedClickHandler(this.#markAsWatchedClickHandler);
+    this.#filmPopup.setMarkAsWatchedClickHandler(this.#markAsWatchedClickHandler);
+    this.#filmCard.setAddToFavoritesClickHandler(this.#addToFavoritesClickHandler);
+    this.#filmPopup.setAddToFavoritesClickHandler(this.#addToFavoritesClickHandler);
 
     if (prevFilmCard === null || prevFilmPopup === null) {
       render(this.#filmsListContainer, this.#filmCard, RENEDER_POSITION.BEFOREEND);
@@ -37,11 +45,11 @@ export default class FilmPresenter {
 
     // Проверка на наличие в DOM необходима,
     // чтобы не пытаться заменить то, что не было отрисовано
-    if (this.#filmsListContainer.element.contains(prevFilmCard.element)) {
+    if (this.#filmsListContainer.contains(prevFilmCard.element)) {
       replace(this.#filmCard, prevFilmCard);
     }
 
-    if (this.#filmsListContainer.element.contains(prevFilmPopup.element)) {
+    if (this.#filmsListContainer.contains(prevFilmPopup.element)) {
       replace(this.#filmPopup, prevFilmPopup);
     }
 
@@ -80,5 +88,20 @@ export default class FilmPresenter {
   #closePopupClickHandler = () => {
     this.#hidePopup();
     document.removeEventListener('keydown', this.#onEscKeydown);
+  };
+
+  #addToWatchListClickHandler = () => {
+    this.#film.addToWatchlist = !this.#film.addToWatchlist;
+    this.#filmUpdateHandler(this.#film);
+  };
+
+  #markAsWatchedClickHandler = () => {
+    this.#film.alreadyWatched = !this.#film.alreadyWatched;
+    this.#filmUpdateHandler(this.#film);
+  };
+
+  #addToFavoritesClickHandler = () => {
+    this.#film.isFavorite = !this.#film.isFavorite;
+    this.#filmUpdateHandler(this.#film);
   };
 }
