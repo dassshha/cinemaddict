@@ -5,6 +5,7 @@ import FilmsView from "../view/films-view";
 import {render, RENEDER_POSITION, remove} from "../render";
 import {CARDS_COUNT, CARDS_COUNT_PER_STEP} from "../constants";
 import FilmPresenter from "./film-presenter";
+import {updateItem} from "../utils";
 
 export default class FilmsListPresenter {
   #filmsContainer = null; //main
@@ -34,6 +35,11 @@ export default class FilmsListPresenter {
 
     this.#renderFilmsList();
   }
+
+  #filmUpdateHandler = (updatedFilm) => {
+    this.#films = updateItem(this.#films, updatedFilm);
+    this.#filmPresenter.get(updatedFilm.id).init(updatedFilm, this.#comments);
+  };
 
   #renderFilm = (film) => {
     const filmPresenter = new FilmPresenter(this.#filmsListAllContainer);
