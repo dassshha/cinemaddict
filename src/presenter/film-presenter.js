@@ -1,7 +1,7 @@
 import FilmCardView from "../view/film-card-view";
 import PopupView from "../view/popup-view";
 import {isEscapeKey} from "../utils";
-import {render, RENEDER_POSITION} from "../render";
+import {render, RENEDER_POSITION, remove, replace} from "../render";
 
 export default class FilmPresenter {
   #filmsListContainer = null;
@@ -21,13 +21,37 @@ export default class FilmPresenter {
     this.#film = film;
     this.#comments = [...comments];
 
+    const prevFilmCard = this.#filmCard;
+    const prevFilmPopup = this.#filmPopup;
+
     this.#filmCard = new FilmCardView(film);
     this.#filmPopup =  new PopupView(film, this.#comments);
 
     this.#filmCard.setOpenPopupClickHandler(this.#openPopupClickHandler);
     this.#filmPopup.setClosePopupClickHandler(this.#closePopupClickHandler);
 
-    render(this.#filmsListContainer, this.#filmCard, RENEDER_POSITION.BEFOREEND);
+    if (prevFilmCard === null || prevFilmPopup === null) {
+      render(this.#filmsListContainer, this.#filmCard, RENEDER_POSITION.BEFOREEND);
+      return;
+    }
+
+    // Проверка на наличие в DOM необходима,
+    // чтобы не пытаться заменить то, что не было отрисовано
+    if (this.#filmsListContainer.element.contains(prevFilmCard.element)) {
+      replace(this.#filmCard, prevFilmCard);
+    }
+
+    if (this.#filmsListContainer.element.contains(prevFilmPopup.element)) {
+      replace(this.#filmPopup, prevFilmPopup);
+    }
+
+    remove(prevFilmCard);
+    remove(prevFilmPopup);
+  }
+
+  destroy = () => {
+    remove(this.#filmCard);
+    remove(this.#filmPopup);
   }
 
   #showPopup = () => {
