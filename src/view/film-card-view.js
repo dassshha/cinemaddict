@@ -32,7 +32,7 @@ const createFilmCardTemplate = (film) => {
             <button class="film-card__controls-item ${ifWatchedClassName}" type="button">Mark as watched</button>
             <button class="film-card__controls-item ${isFavoriteClassName}" type="button">Mark as favorite</button>
           </div>
-        </article>`
+        </article>`;
 };
 
 
@@ -56,4 +56,32 @@ export default class FilmCardView extends AbstractView {
     evt.preventDefault();
     this._callback.openPopupClick();
   };
+
+  setAddToWatchListClickHandler (callback) {
+    this._callback.addToWatchListClick = callback;
+    this.element.querySelector('.film-card__controls-item--add-to-watchlist').addEventListener('click', this.#addToWatchListClickHandler);
+  }
+
+  #addToWatchListClickHandler = () => {
+    this._callback.addToWatchListClick();
+  };
+
+  setMarkAsWatchedClickHandler (callback) {
+    this._callback.markAsWatchedClick = callback;
+    this.element.querySelector('.film-card__controls-item--mark-as-watched').addEventListener('click', this.#markAsWatchedClickHandler);
+  }
+
+  #markAsWatchedClickHandler = () => {
+    this._callback.markAsWatchedClick();
+  };
+
+  setAddToFavoritesClickHandler (callback) {
+    this._callback.addToFavoritesClick = callback;
+    this.element.querySelector('.film-card__controls-item--favorite').addEventListener('click', this.#addToFavoritesClickHandler);
+  }
+
+  #addToFavoritesClickHandler = () => {
+    this._callback.addToFavoritesClick();
+  };
+
 }
