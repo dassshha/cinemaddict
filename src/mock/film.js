@@ -1,4 +1,5 @@
 import {getRandomNumber} from "../utils.js";
+import {nanoid} from 'nanoid';
 
 const generateTitle = () => {
   const titles = [
@@ -148,6 +149,7 @@ const generateBoolean = () => {
 const generateFilm = () => {
   const title = generateTitle();
   return {
+    id: nanoid(),
     poster: generatePoster(),
     title: title,
     originalTitle: title,
