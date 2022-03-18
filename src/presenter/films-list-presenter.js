@@ -20,6 +20,8 @@ export default class FilmsListPresenter {
 
   #renderedCardsCount = CARDS_COUNT_PER_STEP;
 
+  #filmPresenter = new Map();
+
   constructor(filmsContainer) {
     this.#filmsContainer = filmsContainer;
   }
@@ -36,6 +38,7 @@ export default class FilmsListPresenter {
   #renderFilm = (film) => {
     const filmPresenter = new FilmPresenter(this.#filmsListAllContainer);
     filmPresenter.init(film, this.#comments);
+    this.#filmPresenter.set(film.id, filmPresenter);
   };
 
   #showMoreClickHandler = () => {
