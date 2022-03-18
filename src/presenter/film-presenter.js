@@ -47,10 +47,12 @@ export default class FilmPresenter {
     // чтобы не пытаться заменить то, что не было отрисовано
     if (this.#filmsListContainer.contains(prevFilmCard.element)) {
       replace(this.#filmCard, prevFilmCard);
+
     }
 
-    if (this.#filmsListContainer.contains(prevFilmPopup.element)) {
+    if (this.#body.contains(prevFilmPopup.element)) {
       replace(this.#filmPopup, prevFilmPopup);
+
     }
 
     remove(prevFilmCard);
