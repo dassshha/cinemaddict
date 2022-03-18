@@ -2,10 +2,7 @@ import ShowMoreView from "../view/show-more-view";
 import FilmsListEmptyView from "../view/films-list-empty-view";
 import FilmsListAllView from "../view/films-list-all-view";
 import FilmsView from "../view/films-view";
-import {render, RENEDER_POSITION} from "../render";
-import FilmCardView from "../view/film-card-view";
-import PopupView from "../view/popup-view";
-import {isEscapeKey} from "../utils";
+import {render, RENEDER_POSITION, remove} from "../render";
 import {CARDS_COUNT, CARDS_COUNT_PER_STEP} from "../constants";
 import FilmPresenter from "./film-presenter";
 
@@ -48,7 +45,7 @@ export default class FilmsListPresenter {
 
     this.#renderedCardsCount += CARDS_COUNT_PER_STEP;
     if (this.#renderedCardsCount >= this.#films.length) {
-      this.#showMoreComponent.removeElement();
+      remove(this.#showMoreComponent);
     }
   };
 
