@@ -140,6 +140,11 @@ const generateShortDescription = () => generateFullDescription().slice(0, 140);
 
 const generateAge = () => getRandomNumber(0, 21);
 
+const generateBoolean = () => {
+  const boolean = [true, false];
+  return boolean[getRandomNumber(0, 1)];
+};
+
 const generateFilm = () => {
   const title = generateTitle();
   return {
@@ -157,7 +162,10 @@ const generateFilm = () => {
     fullDescription: generateFullDescription(),
     shortDescription: generateShortDescription(),
     age: generateAge(),
-    commentsCount: '0 comments'
+    commentsCount: '0 comments',
+    addToWatchlist: generateBoolean(),
+    alreadyWatched: generateBoolean(),
+    isFavorite: generateBoolean()
   };
 };
 

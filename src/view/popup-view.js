@@ -16,6 +16,26 @@ const createGenreTemplate = (genres) => {
   return genreTemplate;
 };
 
+const createDetailsButtonsTemplate = (film) => {
+  const inWatchListClassName = film.addToWatchlist
+    ? 'film-details__control-button--active film-details__control-button--watchlist'
+    : 'film-details__control-button--watchlist';
+
+  const ifWatchedClassName = film.alreadyWatched
+    ? 'film-details__control-button--active film-details__control-button--watched'
+    : 'film-details__control-button--watched';
+
+  const isFavoriteClassName = film.isFavorite
+    ? 'film-details__control-button--active film-details__control-button--favorite'
+    : 'film-details__control-button--favorite';
+
+  return `<section class="film-details__controls">
+        <button type="button" class="film-details__control-button ${inWatchListClassName}" id="watchlist" name="watchlist">Add to watchlist</button>
+        <button type="button" class="film-details__control-button ${ifWatchedClassName}" id="watched" name="watched">Already watched</button>
+        <button type="button" class="film-details__control-button ${isFavoriteClassName}" id="favorite" name="favorite">Add to favorites</button>
+      </section>`
+};
+
 const createInfoTemplate = (popup) => (
   `<div class="film-details__top-container">
       <div class="film-details__close">
@@ -81,11 +101,7 @@ const createInfoTemplate = (popup) => (
         </div>
       </div>
 
-      <section class="film-details__controls">
-        <button type="button" class="film-details__control-button film-details__control-button--watchlist" id="watchlist" name="watchlist">Add to watchlist</button>
-        <button type="button" class="film-details__control-button film-details__control-button--active film-details__control-button--watched" id="watched" name="watched">Already watched</button>
-        <button type="button" class="film-details__control-button film-details__control-button--favorite" id="favorite" name="favorite">Add to favorites</button>
-      </section>
+      ${createDetailsButtonsTemplate(popup)}
     </div>`
 );
 
