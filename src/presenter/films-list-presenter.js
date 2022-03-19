@@ -41,8 +41,17 @@ export default class FilmsListPresenter {
     this.#filmPresenter.get(updatedFilm.id).init(updatedFilm, this.#comments);
   };
 
+  // для регулирования открытия только одного попапа
+  #modeUpdateHandler = (currentFilm) => {
+    this.#filmPresenter.forEach((presenter) => {
+      if (presenter !== this.#filmPresenter.get(currentFilm.id)) {
+        presenter.resetView();
+      }
+    });
+  };
+
   #renderFilm = (film) => {
-    const filmPresenter = new FilmPresenter(this.#filmsListAllContainer, this.#filmUpdateHandler);
+    const filmPresenter = new FilmPresenter(this.#filmsListAllContainer, this.#filmUpdateHandler, this.#modeUpdateHandler);
     filmPresenter.init(film, this.#comments);
     this.#filmPresenter.set(film.id, filmPresenter);
   };

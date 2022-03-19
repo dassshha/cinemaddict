@@ -3,9 +3,15 @@ import PopupView from "../view/popup-view";
 import {isEscapeKey} from "../utils";
 import {render, RENEDER_POSITION, remove, replace} from "../render";
 
+const MODE = {
+  CARD: 'CARD',
+  POPUP: 'POPUP'
+};
+
 export default class FilmPresenter {
   #filmsListContainer = null;
   #filmUpdateHandler = null;
+  #modeUpdateHandler = null;
 
   #filmCard = null;
   #filmPopup = null;
@@ -13,10 +19,12 @@ export default class FilmPresenter {
 
   #film = null;
   #comments = [];
+  #mode = MODE.CARD;
 
-  constructor(filmsListContainer, filmUpdateHandler) {
+  constructor(filmsListContainer, filmUpdateHandler, modeUpdateHandler) {
     this.#filmsListContainer = filmsListContainer;
     this.#filmUpdateHandler = filmUpdateHandler;
+    this.#modeUpdateHandler = modeUpdateHandler;
   }
 
   init = (film, comments) => {
@@ -43,16 +51,12 @@ export default class FilmPresenter {
       return;
     }
 
-    // Проверка на наличие в DOM необходима,
-    // чтобы не пытаться заменить то, что не было отрисовано
-    if (this.#filmsListContainer.contains(prevFilmCard.element)) {
+    if (this.#mode === MODE.CARD) {
       replace(this.#filmCard, prevFilmCard);
-
     }
 
-    if (this.#body.contains(prevFilmPopup.element)) {
+    if (this.#mode === MODE.POPUP) {
       replace(this.#filmPopup, prevFilmPopup);
-
     }
 
     remove(prevFilmCard);
@@ -63,6 +67,12 @@ export default class FilmPresenter {
     remove(this.#filmCard);
     remove(this.#filmPopup);
   }
+
+  resetView = () => {
+    if (this.#mode !== MODE.CARD) {
+      this.#closePopupClickHandler();
+    }
+  };
 
   #showPopup = () => {
     this.#body.appendChild(this.#filmPopup.element);
@@ -85,11 +95,14 @@ export default class FilmPresenter {
   #openPopupClickHandler = () => {
     this.#showPopup();
     document.addEventListener('keydown', this.#onEscKeydown);
+    this.#modeUpdateHandler(this.#film);
+    this.#mode = MODE.POPUP;
   };
 
   #closePopupClickHandler = () => {
     this.#hidePopup();
     document.removeEventListener('keydown', this.#onEscKeydown);
+    this.#mode = MODE.CARD;
   };
 
   #addToWatchListClickHandler = () => {
