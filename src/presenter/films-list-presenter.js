@@ -6,6 +6,7 @@ import {render, RENEDER_POSITION, remove} from "../render";
 import {CARDS_COUNT, CARDS_COUNT_PER_STEP} from "../constants";
 import FilmPresenter from "./film-presenter";
 import {updateItem} from "../utils";
+import SortView from '../view/sort-view';
 
 export default class FilmsListPresenter {
   #filmsContainer = null; //main
@@ -84,13 +85,19 @@ export default class FilmsListPresenter {
     }
   };
 
-  #renderNoFilms = () => render(this.#filmsComponent, this.#filmsListEmptyComponent, RENEDER_POSITION.BEFOREEND);;
+  #renderNoFilms = () => render(this.#filmsComponent, this.#filmsListEmptyComponent, RENEDER_POSITION.BEFOREEND);
+
+  #renderSort = () => {
+    const sortComponent = new SortView();
+    render(this.#filmsContainer, sortComponent, RENEDER_POSITION.AFTERBEGIN);
+  };
 
   #renderFilmsList = () => {
     if (this.#films.length === 0) {
       this.#renderNoFilms();
       return;
     }
+    this.#renderSort();
     this.#renderFilms();
   };
 }

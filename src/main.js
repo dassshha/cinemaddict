@@ -19,15 +19,16 @@ render(header, new ProfileView('Movie buff'), RENEDER_POSITION.BEFOREEND);
 
 // фильтры и сортировка
 const main = document.querySelector('.main');
-render(main, new MainMenuView(0, 0, 0), RENEDER_POSITION.BEFOREEND);
-// при отсутствии фильмов сортировка не отображается
-if (filmsData.length !== 0) {
-  render(main, new SortView(), RENEDER_POSITION.BEFOREEND);
-}
+// // при отсутствии фильмов сортировка не отображается
+// if (filmsData.length !== 0) {
+//   render(main, new SortView(), RENEDER_POSITION.BEFOREEND);
+// }
 
 
 const presenter = new FilmsListPresenter(main);
 presenter.init(filmsData, commentsData);
+
+render(main, new MainMenuView(0, 0, 0), RENEDER_POSITION.AFTERBEGIN);
 
 
 // общее кол-во фильмов (в подвале)
