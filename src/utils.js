@@ -1,7 +1,8 @@
+// включены min и max; работает с отриц и положит
 const getRandomNumber = (min, max) => {
-  min = Math.ceil(Math.min(Math.abs(min), Math.abs(max)));
-  max = Math.floor(Math.max(Math.abs(min),Math.abs(max)));
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min; //Максимум и минимум включаются
 };
 const isEscapeKey = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 const updateItem = (items, update) => {
