@@ -51,13 +51,9 @@ export default class FilmPresenter {
       return;
     }
 
-    if (this.#mode === MODE.CARD) {
-      replace(this.#filmCard, prevFilmCard);
-    }
 
-    if (this.#mode === MODE.POPUP) {
-      replace(this.#filmPopup, prevFilmPopup);
-    }
+    replace(this.#filmCard, prevFilmCard);
+    replace(this.#filmPopup, prevFilmPopup);
 
     remove(prevFilmCard);
     remove(prevFilmPopup);
