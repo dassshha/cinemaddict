@@ -36,8 +36,12 @@ const createDetailsButtonsTemplate = (film) => {
       </section>`
 };
 
-const createInfoTemplate = (popup) => (
-  `<div class="film-details__top-container">
+const createInfoTemplate = (popup) => {
+  const dateRelease = popup.dateRelease.format('DD MMMM YYYY');
+
+  const runtime = popup.runtime.format('HH[h] mm[m]');
+
+  return `<div class="film-details__top-container">
       <div class="film-details__close">
         <button class="film-details__close-btn" type="button">close</button>
       </div>
@@ -75,11 +79,11 @@ const createInfoTemplate = (popup) => (
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${popup.dateRelease}</td>
+              <td class="film-details__cell">${dateRelease}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>
-              <td class="film-details__cell">${popup.runtime}</td>
+              <td class="film-details__cell">${runtime}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Country</td>
@@ -103,7 +107,7 @@ const createInfoTemplate = (popup) => (
 
       ${createDetailsButtonsTemplate(popup)}
     </div>`
-);
+};
 
 const createPopupTemplate = (popup, comments) => (
   `<section class="film-details">

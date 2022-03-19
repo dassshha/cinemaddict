@@ -1,5 +1,6 @@
 import {getRandomNumber} from "../utils.js";
 import {nanoid} from 'nanoid';
+import dayjs from 'dayjs';
 
 const generateTitle = () => {
   const titles = [
@@ -27,9 +28,22 @@ const generatePoster = () => {
 
 const generateRating = () => getRandomNumber(0, 10);
 
-const generateAgeRelease = () => getRandomNumber(1950, 2022);
+const generateDateRelease = () => {
+  const yearGap = getRandomNumber(-60, 0);
+  const monthGap = getRandomNumber(-12, 12);
+  const dayGap = getRandomNumber(-28, 28);
+  const hourGap = getRandomNumber(-24, 24);
+  const minuteGap = getRandomNumber(-60, 60);
 
-const generateRuntime = () => getRandomNumber(10, 180);
+  return dayjs()
+    .add(yearGap, 'year')
+    .add(monthGap, 'month')
+    .add(dayGap, 'day')
+    .add(hourGap, 'hour')
+    .add(minuteGap, 'minute');
+};
+
+const generateRuntime = () => generateDateRelease();
 
 const generateDirector = () => {
   const directors = [
@@ -157,7 +171,7 @@ const generateFilm = () => {
     director: generateDirector(),
     writers: generateWriters(),
     actors: generateActors(),
-    dateRelease: generateAgeRelease(),
+    dateRelease: generateDateRelease(),
     runtime: generateRuntime(),
     country: generateCountry(),
     genres: generateGenres(),
