@@ -8,4 +8,11 @@ const SORT_TYPE = {
   RATING: 'RATING',
 };
 
-export {CARDS_COUNT_PER_STEP, CARDS_COUNT, SORT_TYPE};
+const EMOTIONS = {
+  SMILE: 'smile',
+  SLEEPING: 'sleeping',
+  PUKE:'puke',
+  ANGRY: 'angry',
+};
+
+export {CARDS_COUNT_PER_STEP, CARDS_COUNT, SORT_TYPE, EMOTIONS};
