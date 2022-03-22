@@ -41,4 +41,11 @@ const generateComment = () => ({
   date: '2019/12/31 23:59'
 });
 
-export {generateComment};
+const generateNullComment = () => ({
+  text: null,
+  emotion: null,
+  user: generateUser(),
+  date: '2019/12/31 23:59'
+});
+
+export {generateComment, generateNullComment};
