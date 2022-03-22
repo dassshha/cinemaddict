@@ -119,10 +119,13 @@ const createPopupTemplate = (popup) => (
 
 export default class PopupView extends AbstractView{
   #popup = null;
+  #scrollPosition = 0;
 
   constructor(popup) {
     super();
     this.#popup = popup;
+
+    this.#setLeaveStateScrollHandler();
   }
 
   get template () {
@@ -164,4 +167,22 @@ export default class PopupView extends AbstractView{
   #addToFavoritesClickHandler = () => {
     this._callback.addToFavoritesClick();
   };
+
+  #setLeaveStateScrollHandler = () => {
+    this.element.addEventListener('scroll', this.#leaveStateScrollHandler);
+  }
+
+  #leaveStateScrollHandler = () => {
+    this.#scrollPosition = this.element.scrollTop;
+  };
+
+  get scrollPosition () {
+    return this.#scrollPosition;
+  }
+
+  saveScrollPosition = (y) => {
+    this.element.scroll(0, y);
+  };
+
+
 }

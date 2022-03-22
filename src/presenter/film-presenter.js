@@ -35,6 +35,7 @@ export default class FilmPresenter {
     this.#film = film;
     // this.#commentsComponent = [...comments];
 
+
     const prevFilmCard = this.#filmCardComponent;
     const prevFilmPopup = this.#filmPopupComponent;
 
@@ -63,6 +64,8 @@ export default class FilmPresenter {
 
     replace(this.#filmCardComponent, prevFilmCard);
     replace(this.#filmPopupComponent, prevFilmPopup);
+
+    this.#filmPopupComponent.saveScrollPosition(prevFilmPopup.scrollPosition);
 
     remove(prevFilmCard);
     remove(prevFilmPopup);
@@ -132,6 +135,5 @@ export default class FilmPresenter {
     this.#newCommentComponent = new NewCommentView();
     render(this.#commentsComponent.element.querySelector('.film-details__comments-wrap'), this.#newCommentComponent, RENEDER_POSITION.BEFOREEND);
   };
-
 
 }
