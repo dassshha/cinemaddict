@@ -19,7 +19,7 @@ export default class FilmsListPresenter {
 
   #films = [];
   #defaultSortedFilms = [];
-  #comments = [];
+  // #comments = [];
 
   #sortType = SORT_TYPE.DEFAULT;
   #renderedCardsCount = CARDS_COUNT_PER_STEP;
@@ -30,9 +30,9 @@ export default class FilmsListPresenter {
     this.#filmsContainer = filmsContainer;
   }
 
-  init = (films, comments) => {
+  init = (films) => {
     this.#films = [...films];
-    this.#comments = [...comments];
+    // this.#comments = [...comments];
     this.#defaultSortedFilms = [...films];
 
     render(this.#filmsContainer, this.#filmsComponent, RENEDER_POSITION.BEFOREEND);
@@ -67,7 +67,7 @@ export default class FilmsListPresenter {
   #filmUpdateHandler = (updatedFilm) => {
     this.#films = updateItem(this.#films, updatedFilm);
     this.#defaultSortedFilms = updateItem(this.#defaultSortedFilms, updatedFilm);
-    this.#filmPresenter.get(updatedFilm.id).init(updatedFilm, this.#comments);
+    this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
   };
 
   // для регулирования открытия только одного попапа
@@ -81,7 +81,7 @@ export default class FilmsListPresenter {
 
   #renderFilm = (film) => {
     const filmPresenter = new FilmPresenter(this.#filmsListAllContainer, this.#filmUpdateHandler, this.#modeUpdateHandler);
-    filmPresenter.init(film, this.#comments);
+    filmPresenter.init(film);
     this.#filmPresenter.set(film.id, filmPresenter);
   };
 

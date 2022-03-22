@@ -109,27 +109,24 @@ const createInfoTemplate = (popup) => {
     </div>`
 };
 
-const createPopupTemplate = (popup, comments) => (
+const createPopupTemplate = (popup) => (
   `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
     ${createInfoTemplate(popup)}
-
-    ${new CommentsView(comments).template}
   </form>
 </section>`
 );
 
 export default class PopupView extends AbstractView{
   #popup = null;
-  #comments = null;
-  constructor(popup, comments) {
+
+  constructor(popup) {
     super();
     this.#popup = popup;
-    this.#comments = comments;
   }
 
   get template () {
-    return createPopupTemplate(this.#popup, this.#comments);
+    return createPopupTemplate(this.#popup);
   }
 
   setClosePopupClickHandler (callback) {

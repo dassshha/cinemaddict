@@ -26,7 +26,7 @@ const main = document.querySelector('.main');
 
 
 const presenter = new FilmsListPresenter(main);
-presenter.init(filmsData, commentsData);
+presenter.init(filmsData);
 
 render(main, new MainMenuView(0, 0, 0), RENEDER_POSITION.AFTERBEGIN);
 
