@@ -16,7 +16,11 @@ const createFilmCardTemplate = (film) => {
 
   const ageRelease = film.dateRelease.format('YYYY');
 
-  const runtime = film.runtime.format('HH[h] mm[m]');
+  const runtime = () => {
+    const hours = film.runtime.hours() > 0 ? 'H[h]' : '';
+    const minutes = film.runtime.minutes() > 0 ? 'm[m]' : '';
+    return film.runtime.format(`${hours} ${minutes}`);
+  };
 
   return `<article class="film-card">
           <a class="film-card__link">
@@ -24,7 +28,7 @@ const createFilmCardTemplate = (film) => {
             <p class="film-card__rating">${film.rating}</p>
             <p class="film-card__info">
               <span class="film-card__year">${ageRelease}</span>
-              <span class="film-card__duration">${runtime}</span>
+              <span class="film-card__duration">${runtime()}</span>
               <span class="film-card__genre">${film.genres[0]}</span>
             </p>
             <img src="${film.poster}" alt="" class="film-card__poster">

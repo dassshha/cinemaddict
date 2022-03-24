@@ -1,7 +1,8 @@
 import {getRandomNumber} from "../utils.js";
 import {nanoid} from 'nanoid';
 import dayjs from 'dayjs';
-
+import duration from 'dayjs/plugin/duration';
+dayjs.extend(duration);
 const generateTitle = () => {
   const titles = [
     'The Dance of Life',
@@ -43,7 +44,8 @@ const generateDateRelease = () => {
     .add(minuteGap, 'minute');
 };
 
-const generateRuntime = () => generateDateRelease();
+const generateRuntime = () => dayjs.duration(getRandomNumber(45, 180), 'minutes');
+
 
 const generateDirector = () => {
   const directors = [
