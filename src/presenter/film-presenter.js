@@ -3,7 +3,7 @@ import PopupView from "../view/popup-view";
 import {isEscapeKey} from "../utils";
 import {render, RENEDER_POSITION, remove, replace} from "../render";
 import CommentsView from '../view/comments-view';
-import {EMOTIONS} from '../constants';
+import {EMOTIONS, UPDATE_TYPE, USER_ACTION} from '../constants';
 import NewCommentView from '../view/new-comment-view';
 
 const MODE = {
@@ -118,17 +118,28 @@ export default class FilmPresenter {
 
   #addToWatchListClickHandler = () => {
     this.#film.addToWatchlist = !this.#film.addToWatchlist;
-    this.#filmUpdateHandler(this.#film);
+    this.#filmUpdateHandler(
+      USER_ACTION.UPDATE_FILM,
+      UPDATE_TYPE.MAJOR,
+      this.#film
+    );
   };
 
   #markAsWatchedClickHandler = () => {
     this.#film.alreadyWatched = !this.#film.alreadyWatched;
-    this.#filmUpdateHandler(this.#film);
+    this.#filmUpdateHandler(
+      USER_ACTION.UPDATE_FILM,
+      UPDATE_TYPE.MAJOR,
+      this.#film
+    );
   };
 
   #addToFavoritesClickHandler = () => {
     this.#film.isFavorite = !this.#film.isFavorite;
-    this.#filmUpdateHandler(this.#film);
+    this.#filmUpdateHandler(
+      USER_ACTION.UPDATE_FILM,
+      UPDATE_TYPE.MAJOR,
+      this.#film);
   };
 
   #renderNewCommentComponent = () => {

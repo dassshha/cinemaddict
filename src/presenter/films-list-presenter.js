@@ -3,9 +3,9 @@ import FilmsListEmptyView from "../view/films-list-empty-view";
 import FilmsListAllView from "../view/films-list-all-view";
 import FilmsView from "../view/films-view";
 import {render, RENEDER_POSITION, remove} from "../render";
-import {CARDS_COUNT, CARDS_COUNT_PER_STEP, SORT_TYPE} from '../constants';
+import {CARDS_COUNT, CARDS_COUNT_PER_STEP, SORT_TYPE, UPDATE_TYPE, USER_ACTION} from '../constants';
 import FilmPresenter from "./film-presenter";
-import {sortFilmsByDateDown, sortFilmsByRatingDown, updateItem} from '../utils';
+import {sortFilmsByDateDown, sortFilmsByRatingDown} from '../utils';
 import SortView from '../view/sort-view';
 
 export default class FilmsListPresenter {
@@ -30,6 +30,8 @@ export default class FilmsListPresenter {
   constructor(filmsContainer, filmsModel) {
     this.#filmsContainer = filmsContainer;
     this.#filmsModel = filmsModel;
+
+    this.#filmsModel.addObserver(this.#modelEventHandler);
   }
 
   init = () => {
@@ -77,11 +79,45 @@ export default class FilmsListPresenter {
     this.#renderFilms();
   };
 
-  #filmUpdateHandler = (updatedFilm) => {
-    // this.#films = updateItem(this.#films, updatedFilm);
-    // this.#defaultSortedFilms = updateItem(this.#defaultSortedFilms, updatedFilm);
-    this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
-  };
+  // #filmUpdateHandler = (updatedFilm) => {
+  //   // this.#films = updateItem(this.#films, updatedFilm);
+  //   // this.#defaultSortedFilms = updateItem(this.#defaultSortedFilms, updatedFilm);
+  //   this.#filmPresenter.get(updatedFilm.id).init(updatedFilm);
+  //   console.log(this.films[0].addToWatchlist);
+  // };
+
+  #viewActionHandler = (actionType, updateType, update) => {
+    console.log(actionType, updateType, update);
+    // Здесь будем вызывать обновление модели.
+    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
+    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
+    // update - обновленные данные
+    switch (actionType) {
+      case USER_ACTION.UPDATE_FILM:
+        this.#filmsModel.updateFilm(updateType, update);
+        break;
+    }
+  }
+
+  #modelEventHandler = (updateType, data) => {
+    console.log(updateType, data);
+    // В зависимости от типа изменений решаем, что делать:
+    // - обновить часть списка (например, когда поменялось описание)
+    // - обновить список (например, когда задача ушла в архив)
+    // - обновить всю доску (например, при переключении фильтра)
+    switch (updateType) {
+      case UPDATE_TYPE.PATCH:
+        // - обновить часть списка (например, когда поменялось описание)
+        this.#filmsModel.get(data.id).init(data);
+        break;
+      case UPDATE_TYPE.MINOR:
+        // - обновить список (например, когда задача ушла в архив)
+        break;
+      case UPDATE_TYPE.MAJOR:
+        // - обновить всю доску (например, при переключении фильтра)
+        break;
+    }
+  }
 
   // для регулирования открытия только одного попапа
   #modeUpdateHandler = (currentFilm) => {
@@ -93,7 +129,7 @@ export default class FilmsListPresenter {
   };
 
   #renderFilm = (film) => {
-    const filmPresenter = new FilmPresenter(this.#filmsListAllContainer, this.#filmUpdateHandler, this.#modeUpdateHandler);
+    const filmPresenter = new FilmPresenter(this.#filmsListAllContainer, this.#viewActionHandler, this.#modeUpdateHandler);
     filmPresenter.init(film);
     this.#filmPresenter.set(film.id, filmPresenter);
   };
