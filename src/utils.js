@@ -7,7 +7,7 @@ const getRandomNumber = (min, max) => {
 
 const sortFilmsByRatingDown = (film1, film2) => film2.rating - film1.rating;
 
-const sortFilmsByDate = (film1, film2) => film1.dateRelease.isBefore(film2.dateRelease) ? 1 : -1;
+const sortFilmsByDateDown = (film1, film2) => film1.dateRelease.isBefore(film2.dateRelease) ? 1 : -1;
 
 const isEscapeKey = (evt) => evt.key === 'Escape' || evt.key === 'Esc';
 const updateItem = (items, update) => {
@@ -23,4 +23,4 @@ const updateItem = (items, update) => {
     ...items.slice(index + 1),
   ];
 };
-export {getRandomNumber, isEscapeKey, updateItem, sortFilmsByRatingDown, sortFilmsByDate};
+export {getRandomNumber, isEscapeKey, updateItem, sortFilmsByRatingDown, sortFilmsByDateDown};
