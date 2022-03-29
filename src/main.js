@@ -8,6 +8,7 @@ import {getRandomNumber} from "./utils";
 import FilmsListPresenter from "./presenter/films-list-presenter";
 import {CARDS_COUNT} from "./constants";
 import FilmsModel from './model/films-model';
+import FilterModel from './model/filters-model';
 
 
 const filmsData = Array.from({length: CARDS_COUNT}, generateFilm);
@@ -18,14 +19,15 @@ const header = document.querySelector('.header');
 render(header, new ProfileView('Movie buff'), RENEDER_POSITION.BEFOREEND);
 
 // фильтры и сортировка
+const filterModel = new FilterModel();
 const main = document.querySelector('.main');
+render(main, new MainMenuView(0, 0, 0), RENEDER_POSITION.AFTERBEGIN);
 
+const content = main.querySelector('.content');
 const filmsModel = new FilmsModel();
 filmsModel.films = filmsData;
-const presenter = new FilmsListPresenter(main, filmsModel);
+const presenter = new FilmsListPresenter(content, filmsModel);
 presenter.init();
-
-render(main, new MainMenuView(0, 0, 0), RENEDER_POSITION.AFTERBEGIN);
 
 
 // общее кол-во фильмов (в подвале)
