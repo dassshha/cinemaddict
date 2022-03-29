@@ -5,13 +5,14 @@ import FilmsView from "../view/films-view";
 import {render, RENEDER_POSITION, remove} from "../render";
 import {CARDS_COUNT, CARDS_COUNT_PER_STEP, SORT_TYPE, UPDATE_TYPE, USER_ACTION} from '../constants';
 import FilmPresenter from "./film-presenter";
-import {sortFilmsByDateDown, sortFilmsByRatingDown} from '../utils';
+import {filter, sortFilmsByDateDown, sortFilmsByRatingDown} from '../utils';
 import SortView from '../view/sort-view';
 
 export default class FilmsListPresenter {
   #filmsContainer = null; //main
   #filmsListAllContainer = null;
   #filmsModel = null;
+  #filterModel = null;
   #sortComponent = null;
 
   #filmsComponent = new FilmsView();
@@ -28,11 +29,13 @@ export default class FilmsListPresenter {
 
   #filmPresenter = new Map();
 
-  constructor(filmsContainer, filmsModel) {
+  constructor(filmsContainer, filmsModel, filterModel) {
     this.#filmsContainer = filmsContainer;
     this.#filmsModel = filmsModel;
+    this.#filterModel = filterModel;
 
     this.#filmsModel.addObserver(this.#modelEventHandler);
+    this.#filterModel.addObserver(this.#modelEventHandler);
   }
 
   init = () => {
@@ -46,13 +49,17 @@ export default class FilmsListPresenter {
   }
 
   get films () {
+    const filterType = this.#filterModel.filter;
+    const films = this.#filmsModel.films;
+    const filteredFilms = filter(films, filterType);
+
     switch (this.#sortType) {
       case SORT_TYPE.DATE:
-        return [...this.#filmsModel.films].sort(sortFilmsByDateDown);
+        return filteredFilms.sort(sortFilmsByDateDown);
       case SORT_TYPE.RATING:
-        return [...this.#filmsModel.films].sort(sortFilmsByRatingDown);
+        return filteredFilms.sort(sortFilmsByRatingDown);
     }
-    return this.#filmsModel.films;
+    return filteredFilms;
   }
 
   // #sortFilms = (sortType) => {
@@ -88,7 +95,7 @@ export default class FilmsListPresenter {
   // };
 
   #viewActionHandler = (actionType, updateType, update) => {
-    console.log(actionType, updateType, update);
+    // console.log(actionType, updateType, update);
     // Здесь будем вызывать обновление модели.
     // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
     // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
@@ -101,7 +108,7 @@ export default class FilmsListPresenter {
   }
 
   #modelEventHandler = (updateType, data) => {
-    console.log(updateType, data);
+    // console.log(updateType, data);
     // В зависимости от типа изменений решаем, что делать:
     // - обновить часть списка (например, когда поменялось описание)
     // - обновить список (например, когда задача ушла в архив)
@@ -160,6 +167,9 @@ export default class FilmsListPresenter {
     this.#filmsListAllContainer = this.#filmsListAllComponent.element.querySelector('.films-list__container');
     for (let i=0;i < Math.min(CARDS_COUNT, CARDS_COUNT_PER_STEP); i++) {
       this.#renderFilm(this.films[i]);
+      // console.log(i);
+      // console.log(this.films[i]);
+
     }
 
     if (this.films.length > CARDS_COUNT_PER_STEP) {
@@ -182,6 +192,7 @@ export default class FilmsListPresenter {
     remove(this.#showMoreComponent);
     remove(this.#filmsListEmptyComponent);
     remove(this.#sortComponent);
+    remove(this.#filmsListAllComponent);
 
     if (resetRenderedCardsCount) {
       this.#renderedCardsCount = CARDS_COUNT_PER_STEP;
@@ -193,7 +204,6 @@ export default class FilmsListPresenter {
     if (resetSortType) {
       this.#sortType = SORT_TYPE.DEFAULT;
     }
-
   }
 
   #renderFilmsList = () => {

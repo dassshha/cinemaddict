@@ -35,7 +35,6 @@ export default class FilmPresenter {
     this.#film = film;
     // this.#commentsComponent = [...comments];
 
-
     const prevFilmCard = this.#filmCardComponent;
     const prevFilmPopup = this.#filmPopupComponent;
 

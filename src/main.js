@@ -9,6 +9,7 @@ import FilmsListPresenter from "./presenter/films-list-presenter";
 import {CARDS_COUNT} from "./constants";
 import FilmsModel from './model/films-model';
 import FilterModel from './model/filters-model';
+import FilterPresenter from './presenter/filter-presenter';
 
 
 const filmsData = Array.from({length: CARDS_COUNT}, generateFilm);
@@ -19,14 +20,16 @@ const header = document.querySelector('.header');
 render(header, new ProfileView('Movie buff'), RENEDER_POSITION.BEFOREEND);
 
 // фильтры и сортировка
-const filterModel = new FilterModel();
 const main = document.querySelector('.main');
-render(main, new MainMenuView(0, 0, 0), RENEDER_POSITION.AFTERBEGIN);
-
-const content = main.querySelector('.content');
+const filterModel = new FilterModel();
 const filmsModel = new FilmsModel();
 filmsModel.films = filmsData;
-const presenter = new FilmsListPresenter(content, filmsModel);
+const filterPresenter = new FilterPresenter(main, filterModel, filmsModel);
+// render(main, new MainMenuView(0, 0, 0, 'ALL'), RENEDER_POSITION.AFTERBEGIN);
+filterPresenter.init();
+
+const content = main.querySelector('.content');
+const presenter = new FilmsListPresenter(content, filmsModel, filterModel);
 presenter.init();
 
 
