@@ -12,6 +12,7 @@ export default class FilmsListPresenter {
   #filmsContainer = null; //main
   #filmsListAllContainer = null;
   #filmsModel = null;
+  #sortComponent = null;
 
   #filmsComponent = new FilmsView();
   #filmsListAllComponent = new FilmsListAllView();
@@ -75,8 +76,8 @@ export default class FilmsListPresenter {
     }
     // this.#sortFilms(sortType);
     this.#sortType = sortType;
-    this.#clearFilmsList();
-    this.#renderFilms();
+    this.#clearFilmsList(true);
+    this.#renderFilmsList();
   };
 
   // #filmUpdateHandler = (updatedFilm) => {
@@ -112,9 +113,13 @@ export default class FilmsListPresenter {
         break;
       case UPDATE_TYPE.MINOR:
         // - обновить список (например, когда задача ушла в архив)
+        this.#clearFilmsList();
+        this.#renderFilmsList();
         break;
       case UPDATE_TYPE.MAJOR:
         // - обновить всю доску (например, при переключении фильтра)
+        this.#clearFilmsList(true, true);
+        this.#renderFilmsList();
         break;
     }
   }
@@ -165,16 +170,30 @@ export default class FilmsListPresenter {
   #renderNoFilms = () => render(this.#filmsComponent, this.#filmsListEmptyComponent, RENEDER_POSITION.BEFOREEND);
 
   #renderSort = () => {
-    const sortComponent = new SortView();
-    sortComponent.setUpdateSortTypeClickHandler(this.#sortFilmsHandler);
-    render(this.#filmsContainer, sortComponent, RENEDER_POSITION.AFTERBEGIN);
+    this.#sortComponent = new SortView(this.#sortType);
+    this.#sortComponent.setUpdateSortTypeClickHandler(this.#sortFilmsHandler);
+    render(this.#filmsContainer, this.#sortComponent, RENEDER_POSITION.AFTERBEGIN);
   };
 
-  #clearFilmsList = () => {
+  #clearFilmsList = (resetRenderedCardsCount = false, resetSortType = false) => {
     this.#filmPresenter.forEach((presenter) => presenter.destroy());
     this.#filmPresenter.clear();
-    this.#renderedCardsCount = CARDS_COUNT_PER_STEP;
+
     remove(this.#showMoreComponent);
+    remove(this.#filmsListEmptyComponent);
+    remove(this.#sortComponent);
+
+    if (resetRenderedCardsCount) {
+      this.#renderedCardsCount = CARDS_COUNT_PER_STEP;
+    } else {
+      // если перерисовка вызвана удалением карточки;
+      this.#renderedCardsCount = Math.min(this.films.length, this.#renderedCardsCount);
+    }
+
+    if (resetSortType) {
+      this.#sortType = SORT_TYPE.DEFAULT;
+    }
+
   }
 
   #renderFilmsList = () => {
