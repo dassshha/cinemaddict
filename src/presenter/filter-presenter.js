@@ -24,10 +24,10 @@ export default class FilterPresenter {
     const films = this.#filmsModel.films;
 
     return {
-      [FILTER_TYPE.ALL] : films.length,
-      [FILTER_TYPE.WATCHLIST] : films.filter((film) => film.addToWatchlist).length,
-      [FILTER_TYPE.HISTORY] : films.filter((film) => film.alreadyWatched).length,
-      [FILTER_TYPE.FAVORITES] : films.filter((film) => film.isFavorite).length,
+      [FILTER_TYPE.ALL] : filter(films, FILTER_TYPE.ALL).length,
+      [FILTER_TYPE.WATCHLIST] : filter(films, FILTER_TYPE.WATCHLIST).length,
+      [FILTER_TYPE.HISTORY] : filter(films, FILTER_TYPE.HISTORY).length,
+      [FILTER_TYPE.FAVORITES] : filter(films, FILTER_TYPE.FAVORITES).length,
       };
   }
 
