@@ -3,7 +3,15 @@ import FilmsListEmptyView from "../view/films-list-empty-view";
 import FilmsListAllView from "../view/films-list-all-view";
 import FilmsView from "../view/films-view";
 import {render, RENEDER_POSITION, remove} from "../render";
-import {CARDS_COUNT, CARDS_COUNT_PER_STEP, SORT_TYPE, UPDATE_TYPE, USER_ACTION} from '../constants';
+import {
+  CARDS_COUNT,
+  CARDS_COUNT_PER_STEP,
+  EMPTY_LIST_MESSAGES,
+  FILTER_TYPE,
+  SORT_TYPE,
+  UPDATE_TYPE,
+  USER_ACTION
+} from '../constants';
 import FilmPresenter from "./film-presenter";
 import {filter, sortFilmsByDateDown, sortFilmsByRatingDown} from '../utils';
 import SortView from '../view/sort-view';
@@ -17,7 +25,7 @@ export default class FilmsListPresenter {
 
   #filmsComponent = new FilmsView();
   #filmsListAllComponent = new FilmsListAllView();
-  #filmsListEmptyComponent = new FilmsListEmptyView('There are no films in our database');
+  #filmsListEmptyComponent = null;
   #showMoreComponent = new ShowMoreView();
 
   // #films = [];
@@ -25,6 +33,7 @@ export default class FilmsListPresenter {
   // #comments = [];
 
   #sortType = SORT_TYPE.DEFAULT;
+  #filterType = FILTER_TYPE.ALL;
   #renderedCardsCount = CARDS_COUNT_PER_STEP;
 
   #filmPresenter = new Map();
@@ -49,9 +58,9 @@ export default class FilmsListPresenter {
   }
 
   get films () {
-    const filterType = this.#filterModel.filter;
+    this.#filterType = this.#filterModel.filter;
     const films = this.#filmsModel.films;
-    const filteredFilms = filter(films, filterType);
+    const filteredFilms = filter(films, this.#filterType);
 
     switch (this.#sortType) {
       case SORT_TYPE.DATE:
@@ -177,7 +186,10 @@ export default class FilmsListPresenter {
     }
   };
 
-  #renderNoFilms = () => render(this.#filmsComponent, this.#filmsListEmptyComponent, RENEDER_POSITION.BEFOREEND);
+  #renderNoFilms = () => {
+    this.#filmsListEmptyComponent = new FilmsListEmptyView(EMPTY_LIST_MESSAGES[this.#filterType]);
+    render(this.#filmsComponent, this.#filmsListEmptyComponent, RENEDER_POSITION.BEFOREEND);
+  }
 
   #renderSort = () => {
     this.#sortComponent = new SortView(this.#sortType);
@@ -190,9 +202,11 @@ export default class FilmsListPresenter {
     this.#filmPresenter.clear();
 
     remove(this.#showMoreComponent);
-    remove(this.#filmsListEmptyComponent);
     remove(this.#sortComponent);
     remove(this.#filmsListAllComponent);
+    if (this.#filmsListEmptyComponent) {
+      remove(this.#filmsListEmptyComponent);
+    }
 
     if (resetRenderedCardsCount) {
       this.#renderedCardsCount = CARDS_COUNT_PER_STEP;
