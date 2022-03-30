@@ -1,5 +1,5 @@
 const CARDS_COUNT_PER_STEP = 5;
-const CARDS_COUNT = 23;
+const CARDS_COUNT = 3;
 const CARDS_TOP_COUNT = 2;
 
 const SORT_TYPE = {
@@ -31,4 +31,11 @@ const FILTER_TYPE = {
   HISTORY: 'HISTORY',
   FAVORITES: 'FAVORITES',
 };
-export {CARDS_COUNT_PER_STEP, CARDS_COUNT, SORT_TYPE, EMOTIONS, USER_ACTION, UPDATE_TYPE, FILTER_TYPE};
+
+const EMPTY_LIST_MESSAGES = {
+  ALL: 'There are no movies in our database',
+  WATCHLIST: 'There are no movies to watch now',
+  HISTORY: 'There are no watched movies now',
+  FAVORITES: 'There are no favorite movies now',
+};
+export {CARDS_COUNT_PER_STEP, CARDS_COUNT, SORT_TYPE, EMOTIONS, USER_ACTION, UPDATE_TYPE, FILTER_TYPE, EMPTY_LIST_MESSAGES};

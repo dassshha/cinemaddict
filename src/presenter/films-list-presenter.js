@@ -21,6 +21,7 @@ export default class FilmsListPresenter {
   #filmsListAllContainer = null;
   #filmsModel = null;
   #filterModel = null;
+  #commentsModel = null;
   #sortComponent = null;
 
   #filmsComponent = new FilmsView();
@@ -38,10 +39,11 @@ export default class FilmsListPresenter {
 
   #filmPresenter = new Map();
 
-  constructor(filmsContainer, filmsModel, filterModel) {
+  constructor(filmsContainer, filmsModel, filterModel, commentsModel) {
     this.#filmsContainer = filmsContainer;
     this.#filmsModel = filmsModel;
     this.#filterModel = filterModel;
+    this.#commentsModel = commentsModel;
 
     this.#filmsModel.addObserver(this.#modelEventHandler);
     this.#filterModel.addObserver(this.#modelEventHandler);
@@ -73,6 +75,10 @@ export default class FilmsListPresenter {
       }
 
     }
+  }
+
+  get comments () {
+    return this.#commentsModel.comments;
   }
 
   // #sortFilms = (sortType) => {
@@ -156,7 +162,8 @@ export default class FilmsListPresenter {
 
   #renderFilm = (film) => {
     const filmPresenter = new FilmPresenter(this.#filmsListAllContainer, this.#viewActionHandler, this.#modeUpdateHandler);
-    filmPresenter.init(film);
+    const comments = this.comments.filter((comment) => film.comments.includes(comment.id));
+    filmPresenter.init(film, comments);
     this.#filmPresenter.set(film.id, filmPresenter);
   };
 

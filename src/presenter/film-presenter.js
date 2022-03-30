@@ -23,6 +23,7 @@ export default class FilmPresenter {
   #body = document.querySelector('body');
 
   #film = null;
+  #comments = null;
   #mode = MODE.CARD;
 
   constructor(filmsListContainer, filmUpdateHandler, modeUpdateHandler) {
@@ -31,8 +32,9 @@ export default class FilmPresenter {
     this.#modeUpdateHandler = modeUpdateHandler;
   }
 
-  init = (film) => {
+  init = (film, comments) => {
     this.#film = film;
+    this.#comments = [...comments];
     // this.#commentsComponent = [...comments];
 
     const prevFilmCard = this.#filmCardComponent;
@@ -40,7 +42,7 @@ export default class FilmPresenter {
 
     this.#filmCardComponent = new FilmCardView(film);
     this.#filmPopupComponent =  new PopupView(film);
-    this.#commentsComponent = new CommentsView([]);
+    this.#commentsComponent = new CommentsView(this.#comments);
 
     render(this.#filmPopupComponent.element.querySelector('form'), this.#commentsComponent, RENEDER_POSITION.BEFOREEND);
 

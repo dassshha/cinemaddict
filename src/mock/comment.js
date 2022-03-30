@@ -1,4 +1,5 @@
 import {getRandomNumber} from "../utils.js";
+import {nanoid} from 'nanoid';
 
 const generateEmotion = () => {
   const emotions = ['smile', 'sleeping', 'puke', 'angry'];
@@ -35,6 +36,7 @@ const generateText = () => {
   return text;
 };
 const generateComment = () => ({
+  id: nanoid(),
   text: generateText(),
   emotion: generateEmotion(),
   user: generateUser(),
@@ -42,6 +44,7 @@ const generateComment = () => ({
 });
 
 const generateNullComment = () => ({
+  id: nanoid(),
   text: null,
   emotion: null,
   user: generateUser(),

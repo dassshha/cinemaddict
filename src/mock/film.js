@@ -180,7 +180,7 @@ const generateFilm = () => {
     fullDescription: generateFullDescription(),
     shortDescription: generateShortDescription(),
     age: generateAge(),
-    commentsCount: '0 comments',
+    comments: null,
     addToWatchlist: generateBoolean(),
     alreadyWatched: generateBoolean(),
     isFavorite: generateBoolean()
