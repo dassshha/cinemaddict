@@ -47,6 +47,8 @@ export default class FilmsListPresenter {
 
     this.#filmsModel.addObserver(this.#modelEventHandler);
     this.#filterModel.addObserver(this.#modelEventHandler);
+    this.#commentsModel.addObserver(this.#viewActionHandler);
+
   }
 
   init = () => {
@@ -77,9 +79,22 @@ export default class FilmsListPresenter {
     }
   }
 
-  get comments () {
-    return this.#commentsModel.comments;
-  }
+  // #updateFilmsModelEvent = (userAction, updateType) => {
+  //   console.log(userAction, updateType);
+    // console.log(1);
+    // console.log(this.comments);
+    // console.log(this.#commentsModel.comments);
+    // this.#film.comments = [...this.comments.map((comment) => comment.id)];
+    // // console.log(this.comments);
+    // this.#filmUpdateHandler(
+    //   USER_ACTION.UPDATE_FILM,
+    //   UPDATE_TYPE.PATCH,
+    //   this.#film);
+  //};
+
+  // get comments () {
+  //   return this.#commentsModel.comments;
+  // }
 
   // #sortFilms = (sortType) => {
   //   switch (sortType) {
@@ -113,18 +128,15 @@ export default class FilmsListPresenter {
   //   console.log(this.films[0].addToWatchlist);
   // };
 
-  #viewActionHandler = (actionType, updateType, update) => {
-    // console.log(actionType, updateType, update);
+  #viewActionHandler = (updateType, update) => {
+    console.log(updateType, update);
     // Здесь будем вызывать обновление модели.
     // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
     // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
     // update - обновленные данные
-    switch (actionType) {
-      case USER_ACTION.UPDATE_FILM:
-        this.#filmsModel.updateFilm(updateType, update);
-        break;
-    }
-  }
+    this.#filmsModel.updateFilm(updateType, update);
+    };
+
 
   #modelEventHandler = (updateType, data) => {
     // console.log(updateType, data);
@@ -135,6 +147,7 @@ export default class FilmsListPresenter {
     switch (updateType) {
       case UPDATE_TYPE.PATCH:
         // - обновить часть списка (например, когда поменялось значения кнопок или комментарии)
+        // console.log(data.comments);
         this.#filmPresenter.get(data.id).init(data);
         // console.log(this.#filmsModel.films(data.id));
         break;
@@ -161,9 +174,9 @@ export default class FilmsListPresenter {
   };
 
   #renderFilm = (film) => {
-    const filmPresenter = new FilmPresenter(this.#filmsListAllContainer, this.#viewActionHandler, this.#modeUpdateHandler);
-    const comments = this.comments.filter((comment) => film.comments.includes(comment.id));
-    filmPresenter.init(film, comments);
+    const filmPresenter = new FilmPresenter(this.#filmsListAllContainer, this.#viewActionHandler, this.#modeUpdateHandler, this.#commentsModel);
+    // const comments = this.comments.filter((comment) => film.comments.includes(comment.id));
+    filmPresenter.init(film);
     this.#filmPresenter.set(film.id, filmPresenter);
   };
 
@@ -230,7 +243,7 @@ export default class FilmsListPresenter {
     if (resetSortType) {
       this.#sortType = SORT_TYPE.DEFAULT;
     }
-  }
+  };
 
   #renderFilmsList = () => {
     if (this.films.length === 0) {
