@@ -119,7 +119,7 @@ export default class FilmPresenter {
     this.#film.addToWatchlist = !this.#film.addToWatchlist;
     this.#filmUpdateHandler(
       USER_ACTION.UPDATE_FILM,
-      UPDATE_TYPE.MAJOR,
+      UPDATE_TYPE.PATCH,
       this.#film
     );
   };
@@ -128,7 +128,7 @@ export default class FilmPresenter {
     this.#film.alreadyWatched = !this.#film.alreadyWatched;
     this.#filmUpdateHandler(
       USER_ACTION.UPDATE_FILM,
-      UPDATE_TYPE.MAJOR,
+      UPDATE_TYPE.PATCH,
       this.#film
     );
   };
@@ -137,7 +137,7 @@ export default class FilmPresenter {
     this.#film.isFavorite = !this.#film.isFavorite;
     this.#filmUpdateHandler(
       USER_ACTION.UPDATE_FILM,
-      UPDATE_TYPE.MAJOR,
+      UPDATE_TYPE.PATCH,
       this.#film);
   };
 

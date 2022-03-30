@@ -64,11 +64,15 @@ export default class FilmsListPresenter {
 
     switch (this.#sortType) {
       case SORT_TYPE.DATE:
-        return filteredFilms.sort(sortFilmsByDateDown);
+        return [...filteredFilms].sort(sortFilmsByDateDown);
       case SORT_TYPE.RATING:
-        return filteredFilms.sort(sortFilmsByRatingDown);
+        return [...filteredFilms].sort(sortFilmsByRatingDown);
+      default:
+      {
+        return [...filteredFilms];
+      }
+
     }
-    return filteredFilms;
   }
 
   // #sortFilms = (sortType) => {
@@ -124,8 +128,9 @@ export default class FilmsListPresenter {
     // - обновить всю доску (например, при переключении фильтра)
     switch (updateType) {
       case UPDATE_TYPE.PATCH:
-        // - обновить часть списка (например, когда поменялось описание)
-        this.#filmsModel.get(data.id).init(data);
+        // - обновить часть списка (например, когда поменялось значения кнопок или комментарии)
+        this.#filmPresenter.get(data.id).init(data);
+        // console.log(this.#filmsModel.films(data.id));
         break;
       case UPDATE_TYPE.MINOR:
         // - обновить список (например, когда задача ушла в архив)
