@@ -29,4 +29,11 @@ export default class CommentsModel extends AbstractObservable {
     // console.log(film.comments);
     this._notify(updateType, film);
   };
+
+  addComment = (updateType, update, film) => {
+      this.#comments = [...this.#comments, update];
+
+      film.comments.push(update.id);
+      this._notify(updateType, film);
+  }
 }

@@ -115,7 +115,7 @@ const createInfoTemplate = (popup) => {
     </div>`
 };
 
-const NEW_COMMENT = generateNullComment();
+// const NEW_COMMENT = generateNullComment();
 
 const createBigEmotionTemplate = (comment) => (
   `<img src="images/emoji/${comment.emotion}.png" width="55" height="55" alt="emoji-${comment.emotion}">`
@@ -176,7 +176,7 @@ export default class PopupView extends SmartView {
   #popup = null;
   #scrollPosition = 0;
 
-  constructor(popup, nullComment = NEW_COMMENT) {
+  constructor(popup, nullComment = generateNullComment()) {
     super();
     this.#popup = popup;
     this._data = PopupView.parseCommentToData(nullComment);
@@ -214,20 +214,6 @@ export default class PopupView extends SmartView {
     this._callback.renderCommentsList = callback;
   }
 
-  // setSaveScrollPositionHandler (callback) {
-  //   this._callback.saveScrollPosition = callback;
-  // }
-
-  setFormSubmitHandler = (callback) => {
-    this._callback.formSubmit = callback;
-    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-  }
-
-  #formSubmitHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.formSubmit(PopupView.parseDataToComment(this._data));
-  }
-
   restoreHandlers = () => {
     this.#setInnerHandlers();
     this._callback.renderCommentsList();
@@ -236,7 +222,7 @@ export default class PopupView extends SmartView {
     this.setMarkAsWatchedClickHandler(this._callback.markAsWatchedClick);
     this.setAddToFavoritesClickHandler(this._callback.addToFavoritesClick);
     this.saveScrollPosition(this.#scrollPosition);
-    this.setFormSubmitHandler(this._callback.formSubmit);
+    // this.setFormSubmitHandler(this._callback.formSubmit);
   };
 
   #emotionUpdateHandler = (evt) => {
@@ -261,11 +247,15 @@ export default class PopupView extends SmartView {
       .addEventListener('input', this.#textInputHandler);
   };
 
-  reset = (comment = NEW_COMMENT) => {
+  reset = (comment = generateNullComment()) => {
     this.updateData(
       PopupView.parseCommentToData(comment),
       false);
   };
+
+  get newComment () {
+    return PopupView.parseDataToComment(this._data);
+  }
 
   setClosePopupClickHandler (callback) {
     this._callback.closePopupClick = callback;
@@ -302,16 +292,6 @@ export default class PopupView extends SmartView {
   #addToFavoritesClickHandler = () => {
     this._callback.addToFavoritesClick();
   };
-
-  // setFormSubmitHandler (callback) {
-  //   this._callback.formSubmit = callback;
-  //   this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-  // }
-  //
-  // #formSubmitHandler = (evt) => {
-  //   evt.preventDefault();
-  //   this._callback.formSubmit();
-  // };
 
   #setLeaveStateScrollHandler = () => {
     this.element.addEventListener('scroll', this.#leaveStateScrollHandler);

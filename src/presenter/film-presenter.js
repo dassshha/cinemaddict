@@ -3,7 +3,7 @@ import PopupView from "../view/popup-view";
 import {isEscapeKey} from "../utils";
 import {render, RENEDER_POSITION, remove, replace} from "../render";
 import CommentsView from '../view/comments-view';
-import {EMOTIONS, UPDATE_TYPE, USER_ACTION} from '../constants';
+import {EMOTIONS, UPDATE_TYPE, USER_ACTION, KEY_CODES} from '../constants';
 import NewCommentView from '../view/new-comment-view';
 import CommentView from '../view/comment-view';
 
@@ -26,6 +26,7 @@ export default class FilmPresenter {
   #film = null;
   #commentsModel = null;
   #mode = MODE.CARD;
+
 
   constructor(filmsListContainer, filmUpdateHandler, modeUpdateHandler, commentsModel) {
     this.#filmsListContainer = filmsListContainer;
@@ -63,38 +64,28 @@ export default class FilmPresenter {
     this.#filmCardComponent.setAddToFavoritesClickHandler(this.#addToFavoritesClickHandler);
     this.#filmPopupComponent.setAddToFavoritesClickHandler(this.#addToFavoritesClickHandler);
     this.#filmPopupComponent.setRenderCommentsListHandler(this.#renderCommentsList);
-    // this.#filmPopupComponent.setFormSubmitHandler
+    // this.#filmPopupComponent.setFormSubmitHandler(() => alert('finally submit!'));
+
 
     if (prevFilmCard === null || prevFilmPopup === null) {
       render(this.#filmsListContainer, this.#filmCardComponent, RENEDER_POSITION.BEFOREEND);
       return;
     }
-
+    console.log(1);
 
     replace(this.#filmCardComponent, prevFilmCard);
-    // replace(this.#commentsComponent, prevCommentsComponent);
-    replace(this.#filmPopupComponent, prevFilmPopup);
+    if (this.#mode === MODE.POPUP) {
+      replace(this.#filmPopupComponent, prevFilmPopup);
+    }
 
     this.#filmPopupComponent.saveScrollPosition(prevFilmPopup.scrollPosition);
 
     remove(prevFilmCard);
-    // remove(prevCommentsComponent);
     remove(prevFilmPopup);
   }
 
   get comments() {
-    // this.#commentsModel.comments.forEach((comment, i) => {
-    //   // console.log(this.#film.comments[i]);
-    //   // console.log(comment.id);
-    // });
-    // this.#commentsModel.comments.forEach( (comment, i) => {
-    //   console.log(i);
-    //     console.log(this.#film.comments[i]);
-    // });
-    // return this.#commentsModel.comments;
-    // console.log(this.#film.comments);
     return this.#commentsModel.comments.filter((comment) => this.#film.comments.includes(comment.id));
-    // return this.#commentsModel.comments;
 
   }
 
@@ -106,6 +97,16 @@ export default class FilmPresenter {
   resetView = () => {
     if (this.#mode !== MODE.CARD) {
       this.#closePopupClickHandler();
+    }
+  };
+
+  #addNewCommentHandler = (comment) => {
+    this.#commentsModel.addComment(UPDATE_TYPE.PATCH, comment, this.#film);
+  };
+
+  #pressKeysToSubmitFormHandler = (evt) => {
+    if ((evt.code === 'Enter') && (evt.ctrlKey || evt.metaKey) ) {
+      this.#addNewCommentHandler(this.#filmPopupComponent.newComment);
     }
   };
 
@@ -125,6 +126,7 @@ export default class FilmPresenter {
       this.#filmPopupComponent.reset();
       this.#hidePopup();
       document.removeEventListener('keydown', this.#onEscKeydown);
+      document.removeEventListener('keydown', this.#pressKeysToSubmitFormHandler);
       this.#mode = MODE.CARD;
     }
   };
@@ -132,6 +134,7 @@ export default class FilmPresenter {
   #openPopupClickHandler = () => {
     this.#showPopup();
     document.addEventListener('keydown', this.#onEscKeydown);
+    document.addEventListener('keydown', this.#pressKeysToSubmitFormHandler);
     this.#modeUpdateHandler(this.#film);
     this.#mode = MODE.POPUP;
   };
@@ -140,6 +143,7 @@ export default class FilmPresenter {
     this.#filmPopupComponent.reset();
     this.#hidePopup();
     document.removeEventListener('keydown', this.#onEscKeydown);
+    document.removeEventListener('keydown', this.#pressKeysToSubmitFormHandler);
     this.#mode = MODE.CARD;
   };
 
@@ -169,31 +173,10 @@ export default class FilmPresenter {
       this.#film);
   };
 
-  // #renderNewCommentComponent = () => {
-  //   this.#newCommentComponent = new NewCommentView();
-  //   render(this.#commentsComponent.element.querySelector('.film-details__comments-wrap'), this.#newCommentComponent, RENEDER_POSITION.BEFOREEND);
-  // };
 
   #deleteClickHandler = (comment) => {
-    // console.log('before deleting');
-    // console.log(this.#commentsModel.comments);
     this.#commentsModel.deleteComment(UPDATE_TYPE.PATCH, comment, this.#film);
-    // console.log('after deleting');
-    // console.log(this.#commentsModel.comments);
   };
-
-  // updateFilmsModelEvent = (userAction, updateType) => {
-  //   console.log(userAction, updateType);
-  //   // console.log(1);
-  //   // console.log(this.comments);
-  //   // console.log(this.#commentsModel.comments);
-  //   // this.#film.comments = [...this.comments.map((comment) => comment.id)];
-  //   // // console.log(this.comments);
-  //   // this.#filmUpdateHandler(
-  //   //   USER_ACTION.UPDATE_FILM,
-  //   //   UPDATE_TYPE.PATCH,
-  //   //   this.#film);
-  // };
 
   #renderCommentsList = () => {
     // console.log(this.#commentsModel.comments);
@@ -205,6 +188,5 @@ export default class FilmPresenter {
     }
   };
 
-  #testCallback = () => console.log('test');
 
 }

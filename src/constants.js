@@ -38,4 +38,5 @@ const EMPTY_LIST_MESSAGES = {
   HISTORY: 'There are no watched movies now',
   FAVORITES: 'There are no favorite movies now',
 };
+
 export {CARDS_COUNT_PER_STEP, CARDS_COUNT, SORT_TYPE, EMOTIONS, USER_ACTION, UPDATE_TYPE, FILTER_TYPE, EMPTY_LIST_MESSAGES};
