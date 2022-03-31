@@ -1,4 +1,3 @@
-import CommentsView from "./comments-view.js";
 import AbstractView from "./abstract-view.js";
 import {generateNullComment} from '../mock/comment';
 import SmartView from './smart-view';

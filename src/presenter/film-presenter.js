@@ -2,9 +2,7 @@ import FilmCardView from "../view/film-card-view.js";
 import PopupView from "../view/popup-view";
 import {isEscapeKey} from "../utils";
 import {render, RENEDER_POSITION, remove, replace} from "../render";
-import CommentsView from '../view/comments-view';
 import {EMOTIONS, UPDATE_TYPE, USER_ACTION, KEY_CODES} from '../constants';
-import NewCommentView from '../view/new-comment-view';
 import CommentView from '../view/comment-view';
 
 const MODE = {
