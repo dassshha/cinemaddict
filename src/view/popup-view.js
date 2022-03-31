@@ -195,6 +195,21 @@ export default class PopupView extends SmartView {
     isText: comment.text !== null,
   });
 
+  static parseDataToComment = (data) => {
+    if (!data.isEmotion) {
+      data.emotion = null;
+    }
+
+    if (!data.text) {
+      data.text = null;
+    }
+
+    delete data.isEmotion;
+    delete data.isText;
+
+    return data;
+  };
+
   setRenderCommentsListHandler (callback) {
     this._callback.renderCommentsList = callback;
   }
@@ -203,10 +218,25 @@ export default class PopupView extends SmartView {
   //   this._callback.saveScrollPosition = callback;
   // }
 
+  setFormSubmitHandler = (callback) => {
+    this._callback.formSubmit = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  }
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formSubmit(PopupView.parseDataToComment(this._data));
+  }
+
   restoreHandlers = () => {
     this.#setInnerHandlers();
     this._callback.renderCommentsList();
+    this.setClosePopupClickHandler(this._callback.closePopupClick);
+    this.setAddToWatchListClickHandler(this._callback.addToWatchListClick);
+    this.setMarkAsWatchedClickHandler(this._callback.markAsWatchedClick);
+    this.setAddToFavoritesClickHandler(this._callback.addToFavoritesClick);
     this.saveScrollPosition(this.#scrollPosition);
+    this.setFormSubmitHandler(this._callback.formSubmit);
   };
 
   #emotionUpdateHandler = (evt) => {
@@ -273,15 +303,15 @@ export default class PopupView extends SmartView {
     this._callback.addToFavoritesClick();
   };
 
-  setFormSubmitHandler (callback) {
-    this._callback.formSubmit = callback;
-    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
-  }
-
-  #formSubmitHandler = (evt) => {
-    evt.preventDefault();
-    this._callback.formSubmit();
-  };
+  // setFormSubmitHandler (callback) {
+  //   this._callback.formSubmit = callback;
+  //   this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  // }
+  //
+  // #formSubmitHandler = (evt) => {
+  //   evt.preventDefault();
+  //   this._callback.formSubmit();
+  // };
 
   #setLeaveStateScrollHandler = () => {
     this.element.addEventListener('scroll', this.#leaveStateScrollHandler);

@@ -63,6 +63,7 @@ export default class FilmPresenter {
     this.#filmCardComponent.setAddToFavoritesClickHandler(this.#addToFavoritesClickHandler);
     this.#filmPopupComponent.setAddToFavoritesClickHandler(this.#addToFavoritesClickHandler);
     this.#filmPopupComponent.setRenderCommentsListHandler(this.#renderCommentsList);
+    // this.#filmPopupComponent.setFormSubmitHandler
 
     if (prevFilmCard === null || prevFilmPopup === null) {
       render(this.#filmsListContainer, this.#filmCardComponent, RENEDER_POSITION.BEFOREEND);
