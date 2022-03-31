@@ -19,7 +19,7 @@ export default class FilmPresenter {
 
   #filmCardComponent = null;
   #filmPopupComponent = null;
-  #commentsComponent = null;
+  //#commentsComponent = null;
   #newCommentComponent = null;
   #body = document.querySelector('body');
 
@@ -43,16 +43,16 @@ export default class FilmPresenter {
 
     const prevFilmCard = this.#filmCardComponent;
     const prevFilmPopup = this.#filmPopupComponent;
-    console.log(prevFilmPopup);
+    // console.log(prevFilmPopup);
     // const prevCommentsComponent = this.#commentsComponent;
 
     this.#filmCardComponent = new FilmCardView(film);
-    this.#commentsComponent = new CommentsView(this.comments);
-    this.#filmPopupComponent =  new PopupView(film);
+    //this.#commentsComponent = new CommentsView(this.comments);
+    this.#filmPopupComponent = new PopupView(film);
 
-    render(this.#filmPopupComponent.element.querySelector('form'), this.#commentsComponent, RENEDER_POSITION.BEFOREEND);
+    //render(this.#filmPopupComponent.element.querySelector('form'), this.#commentsComponent, RENEDER_POSITION.BEFOREEND);
     this.#renderCommentsList();
-    this.#renderNewCommentComponent();
+    //this.#renderNewCommentComponent();
 
     this.#filmCardComponent.setOpenPopupClickHandler(this.#openPopupClickHandler);
     this.#filmPopupComponent.setClosePopupClickHandler(this.#closePopupClickHandler);
@@ -62,6 +62,7 @@ export default class FilmPresenter {
     this.#filmPopupComponent.setMarkAsWatchedClickHandler(this.#markAsWatchedClickHandler);
     this.#filmCardComponent.setAddToFavoritesClickHandler(this.#addToFavoritesClickHandler);
     this.#filmPopupComponent.setAddToFavoritesClickHandler(this.#addToFavoritesClickHandler);
+    this.#filmPopupComponent.setRenderCommentsListHandler(this.#renderCommentsList);
 
     if (prevFilmCard === null || prevFilmPopup === null) {
       render(this.#filmsListContainer, this.#filmCardComponent, RENEDER_POSITION.BEFOREEND);
@@ -80,7 +81,7 @@ export default class FilmPresenter {
     remove(prevFilmPopup);
   }
 
-  get comments () {
+  get comments() {
     // this.#commentsModel.comments.forEach((comment, i) => {
     //   // console.log(this.#film.comments[i]);
     //   // console.log(comment.id);
@@ -120,7 +121,7 @@ export default class FilmPresenter {
   #onEscKeydown = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
-      this.#newCommentComponent.reset();
+      this.#filmPopupComponent.reset();
       this.#hidePopup();
       document.removeEventListener('keydown', this.#onEscKeydown);
       this.#mode = MODE.CARD;
@@ -135,7 +136,7 @@ export default class FilmPresenter {
   };
 
   #closePopupClickHandler = () => {
-    this.#newCommentComponent.reset();
+    this.#filmPopupComponent.reset();
     this.#hidePopup();
     document.removeEventListener('keydown', this.#onEscKeydown);
     this.#mode = MODE.CARD;
@@ -167,10 +168,10 @@ export default class FilmPresenter {
       this.#film);
   };
 
-  #renderNewCommentComponent = () => {
-    this.#newCommentComponent = new NewCommentView();
-    render(this.#commentsComponent.element.querySelector('.film-details__comments-wrap'), this.#newCommentComponent, RENEDER_POSITION.BEFOREEND);
-  };
+  // #renderNewCommentComponent = () => {
+  //   this.#newCommentComponent = new NewCommentView();
+  //   render(this.#commentsComponent.element.querySelector('.film-details__comments-wrap'), this.#newCommentComponent, RENEDER_POSITION.BEFOREEND);
+  // };
 
   #deleteClickHandler = (comment) => {
     // console.log('before deleting');
@@ -196,11 +197,13 @@ export default class FilmPresenter {
   #renderCommentsList = () => {
     // console.log(this.#commentsModel.comments);
     // console.log(this.#film.comments);
-    for (let i =0;i< this.comments.length; i++) {
+    for (let i = 0; i < this.comments.length; i++) {
       const comment = new CommentView(this.comments[i]);
-      render(this.#commentsComponent.element.querySelector('.film-details__comments-list'), comment ,RENEDER_POSITION.BEFOREEND);
+      render(this.#filmPopupComponent.element.querySelector('.film-details__comments-list'), comment, RENEDER_POSITION.BEFOREEND);
       comment.setDeleteCommentClickHandler(this.#deleteClickHandler);
     }
   };
+
+  #testCallback = () => console.log('test');
 
 }

@@ -1,5 +1,7 @@
 import CommentsView from "./comments-view.js";
 import AbstractView from "./abstract-view.js";
+import {generateNullComment} from '../mock/comment';
+import SmartView from './smart-view';
 
 const createGenreTemplate = (genres) => {
   if (genres.length === 1) {
@@ -113,28 +115,127 @@ const createInfoTemplate = (popup) => {
     </div>`
 };
 
-const createPopupTemplate = (popup) => (
+const NEW_COMMENT = generateNullComment();
+
+const createBigEmotionTemplate = (comment) => (
+  `<img src="images/emoji/${comment.emotion}.png" width="55" height="55" alt="emoji-${comment.emotion}">`
+);
+
+const createNewCommentViewTemplate = (comment) => (
+  `<div class="film-details__new-comment">
+          <div class="film-details__add-emoji-label">${comment.isEmotion ? createBigEmotionTemplate(comment) : ''}</div>
+
+          <label class="film-details__comment-label">
+            <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment">${comment.isText ? comment.text : ''}</textarea>
+          </label>
+          <div class="film-details__emoji-list">
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
+            <label class="film-details__emoji-label" for="emoji-smile">
+              <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
+            </label>
+
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
+            <label class="film-details__emoji-label" for="emoji-sleeping">
+              <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
+            </label>
+
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
+            <label class="film-details__emoji-label" for="emoji-puke">
+              <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
+            </label>
+
+            <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
+            <label class="film-details__emoji-label" for="emoji-angry">
+              <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
+            </label>
+</div>
+        </div>`
+);
+
+const createCommentsTemplate = (comments,nullComment) => (
+  `<div class="film-details__bottom-container">
+      <section class="film-details__comments-wrap">
+        <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
+
+        <ul class="film-details__comments-list"></ul>
+        ${createNewCommentViewTemplate(nullComment)}
+      </section>
+    </div>`
+);
+
+const createPopupTemplate = (popup, nullComment) => (
   `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
     ${createInfoTemplate(popup)}
+    ${createCommentsTemplate(popup.comments, nullComment)}
   </form>
 </section>`
 );
 
-export default class PopupView extends AbstractView{
+export default class PopupView extends SmartView {
   #popup = null;
   #scrollPosition = 0;
 
-  constructor(popup) {
+  constructor(popup, nullComment = NEW_COMMENT) {
     super();
     this.#popup = popup;
+    this._data = PopupView.parseCommentToData(nullComment);
 
     this.#setLeaveStateScrollHandler();
+    this.#setInnerHandlers();
   }
 
   get template () {
-    return createPopupTemplate(this.#popup);
+    return createPopupTemplate(this.#popup, this._data);
   }
+
+  static parseCommentToData = (comment) => ({
+    ...comment,
+    isEmotion: comment.emotion !== null,
+    isText: comment.text !== null,
+  });
+
+  setRenderCommentsListHandler (callback) {
+    this._callback.renderCommentsList = callback;
+  }
+
+  // setSaveScrollPositionHandler (callback) {
+  //   this._callback.saveScrollPosition = callback;
+  // }
+
+  restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this._callback.renderCommentsList();
+    this.saveScrollPosition(this.#scrollPosition);
+  };
+
+  #emotionUpdateHandler = (evt) => {
+    this.updateData({
+      emotion: evt.target.value,
+      isEmotion: true,
+    }, false);
+    this.element.querySelector(`#${evt.target.id}`).checked = true;
+  };
+
+  #textInputHandler = (evt) => {
+    this.updateData({
+      text: evt.target.value,
+      isText: evt.target.value.length > 0,
+    }, true);
+  };
+
+  #setInnerHandlers = () => {
+    this.element.querySelector('.film-details__emoji-list')
+      .addEventListener('change', this.#emotionUpdateHandler);
+    this.element.querySelector('.film-details__comment-input')
+      .addEventListener('input', this.#textInputHandler);
+  };
+
+  reset = (comment = NEW_COMMENT) => {
+    this.updateData(
+      PopupView.parseCommentToData(comment),
+      false);
+  };
 
   setClosePopupClickHandler (callback) {
     this._callback.closePopupClick = callback;
@@ -170,6 +271,16 @@ export default class PopupView extends AbstractView{
 
   #addToFavoritesClickHandler = () => {
     this._callback.addToFavoritesClick();
+  };
+
+  setFormSubmitHandler (callback) {
+    this._callback.formSubmit = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#formSubmitHandler);
+  }
+
+  #formSubmitHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.formSubmit();
   };
 
   #setLeaveStateScrollHandler = () => {
